@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.108.0">
+    <title>Outline Web Manager | {{ server_information['name'] }}</title>
+    <link rel="icon" type="image/x-icon" href="/static/images/favicon.png">
+
+    <link href="/static/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .b-example-divider {
+        height: 3rem;
+        background-color: rgba(0, 0, 0, .1);
+        border: solid rgba(0, 0, 0, .15);
+        border-width: 1px 0;
+        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+      }
+
+      .b-example-vr {
+        flex-shrink: 0;
+        width: 1.5rem;
+        height: 100vh;
+      }
+
+      .bi {
+        vertical-align: -.125em;
+        fill: currentColor;
+      }
+
+      .nav-scroller {
+        position: relative;
+        z-index: 2;
+        height: 2.75rem;
+        overflow-y: hidden;
+      }
+
+      .nav-scroller .nav {
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        margin-top: -1px;
+        overflow-x: auto;
+        text-align: center;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      #keys-grid > .row > .col-sm-6 {
+        padding-bottom: .5rem;
+      }
+
+      #keys-grid > .row:not(:last-child) {
+        padding-bottom: .5rem;
+      }
+
+      #keys-grid > .row + .row {
+        padding-top: 1rem;
+        border-top: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color)!important;
+        border-left: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color)!important;
+        border-right: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color)!important;
+        border-radius: 0.5rem;
+      }
+
+      #keys-grid > .row:last-child {
+        padding-bottom: 0.5rem;
+        border-bottom: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color)!important;
+      }
+
+      #server-grid > .row > * {
+        border-top: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color)!important;
+        border-left: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color)!important;
+        border-right: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color)!important;
+        border-radius: 0.5rem;
+      }
+
+      #server-grid > .row:last-child > * {
+        border-bottom: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color)!important;
+      }
+    </style>
+
+    <!-- Custom styles for this template -->
+    <link href="/static/dist/css/main.css" rel="stylesheet">
+    <link href="/static/dist/css/grid.css" rel="stylesheet">
+    <link href="/static/dist/css/primer.core.tooltips.css" rel="stylesheet">
+
+    <script src="/static/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/dist/js/clipboard.min.js"></script>
+  </head>
+
+  <body>
+    <div class="col-lg-8 mx-auto p-3">
+      <header class="d-flex flex-wrap justify-content-center py-3 mb-5 border-bottom">
+        <a href="/" class="d-flex align-items-center mb-md-0 me-md-auto text-dark text-decoration-none">
+          <img class="me-2" src="/static/images/outlinevpn.png" alt="" width="32" height="32">
+          <span class="fs-4">{{ server_information['name'] }}</span>
+        </a>
+
+        <ul class="nav nav-pills">
+          <li class="nav-item">
+            <form action="/logout" method="POST">
+              <button type="submit" class="btn btn-link nav-link">Logout</button>
+            </form>
+          </li>
+        </ul>
+      </header>
+
+      <main>
+        <h3 class="mb-4">Keys</h3>
+
+        <div id="keys-grid" class="mb-3">
+          <div class="row grid-row d-none d-sm-flex fw-bold">
+              <div class="col-sm-6">
+                <div class="row">
+                  <div class="col-auto">#</div>
+                  <div class="col">Name</div>
+                  <div class="col-auto">Usage</div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="row">
+                  <div class="col">Limit</div>
+                  <div class="col-auto">Actions</div>
+                </div>
+              </div>
+            </div>
+          {%- for key in keys %}
+            <div class="row grid-row">
+              <div class="col-sm-6">
+                <div class="row">
+                  <div class="col-auto">
+                    {{ key.key_id }}
+                  </div>
+                  <div class="col">
+                    <form action="/rename/{{ key.key_id }}" method="POST">
+                      <div class="input-group">
+                        <input type="text" class="form-control" placeholder="{{ key.name }}" name="keyName">
+                        <button type="submit" class="btn btn-outline-secondary tooltipped tooltipped-n" aria-label="Rename">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                          </svg>
+                        </button>
+                      </div>
+                </form>
+                  </div>
+                  <div class="col-auto">
+                    <span>{{ "%.1f"|format((key.used_bytes or 0) / 1000 / 1000 / 1000) }} GB</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="row">
+                  <div class="col">
+                    <div class="row">
+                      <div class="col" style="padding-right: 0;">
+                        <form action="/set-data-limit/{{ key.key_id }}" method="POST">
+                          <div class="input-group">
+                            <input type="text" class="form-control" placeholder="{% if key.data_limit or 'accessKeyDataLimit' in server_information %}{{ '%.0f'|format((key.data_limit or server_information['accessKeyDataLimit']['bytes']) / 1000 / 1000 / 1000) }} GB{% else %}<Enter personal limit (GB)>{% endif %}" name="dataLimit">
+                            <button type="submit" class="btn btn-outline-secondary tooltipped tooltipped-n" aria-label="Change limit">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                              </svg>
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                      {% if key.data_limit %}
+                        <div class="col-auto" style="padding-right: 0;">
+                          <form action="/delete-data-limit/{{ key.key_id }}" method="POST">
+                            <button type="submit" class="btn btn-outline-danger tooltipped tooltipped-n" aria-label="Delete limit">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                  <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"></path>
+                              </svg>
+                              <span class="visually-hidden">Delete</span>
+                            </button>
+                          </form>
+                        </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <form action="/delete/{{ key.key_id }}" method="POST">
+                      <div class="btn-group" role="group" aria-label="Actions">
+                        <button type="button" class="btn btn-outline-secondary btn-clipboard tooltipped tooltipped-n" data-clipboard-text="{{ key.access_url }}" aria-label="Copy Access Url">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard-fill" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M10 1.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-1Zm-5 0A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5v1A1.5 1.5 0 0 1 9.5 4h-3A1.5 1.5 0 0 1 5 2.5v-1Zm-2 0h1v1A2.5 2.5 0 0 0 6.5 5h3A2.5 2.5 0 0 0 12 2.5v-1h1a2 2 0 0 1 2 2V14a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3.5a2 2 0 0 1 2-2Z"></path>
+                          </svg>
+                          <span class="visually-hidden">Copy Access Url</span>
+                        </button>
+                        <button type="submit" class="btn btn-danger tooltipped tooltipped-n" aria-label="Delete">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"></path>
+                            </svg>
+                            <span class="visually-hidden">Delete</span>
+                          </a>
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <form class="row mb-5" action="/add" method="POST">
+          <div class="input-group">
+            <input type="text" class="form-control" id="newKeyName" name="newKeyName" placeholder="<Enter new key name>">
+            <button type="submit" class="btn btn-success">Create new key</button>
+          </div>
+        </form>
+
+        <h3>Server</h3>
+        <div id="server-grid">
+          <div class="row grid-row">
+              <div class="col-sm-6">
+                <a class="list-group-item py-3" aria-current="true">
+              <div class="d-flex gap-2 w-100 justify-content-between">
+                <div class="w-100">
+                  <h6 class="mb-0 opacity-75">Server name</h6>
+                  <form class="row" action="/set-server-name" method="POST">
+                    <div class="input-group">
+                      <input type="text" class="form-control" id="serverName" name="serverName" placeholder="{{ server_information['name'] }}">
+                      <button type="submit" class="btn btn-outline-secondary tooltipped tooltipped-n" aria-label="Rename">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                          <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                          <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </a>
+              </div>
+              <div class="col-sm-6">
+                <a class="list-group-item py-3" aria-current="true">
+              <div class="d-flex gap-2 w-100 justify-content-between">
+                <div class="w-100">
+                  <h6 class="mb-0 opacity-75">Data limits</h6>
+                  <div class="row">
+                    <div class="col">
+                      <form action="/set-data-limit" method="POST">
+                        <div class="input-group">
+                          <input type="text" class="form-control" id="dataLimitForAllKeys" name="dataLimitForAllKeys" placeholder="{% if 'accessKeyDataLimit' in server_information %}{{ '%.0f'|format(server_information['accessKeyDataLimit']['bytes'] / 1000 / 1000 / 1000) }} GB{% else %}<Set a 30 day trailing data transfer limit (GB) for access keys>{% endif %}">
+                          <button type="submit" class="btn btn-outline-secondary tooltipped tooltipped-n" aria-label="Set global limit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                              <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                              <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                            </svg>
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                    {% if 'accessKeyDataLimit' in server_information %}
+                      <div class="col-auto" style="padding-left: 0;">
+                          <form action="/delete-data-limit" method="POST">
+                            <div class="input-group">
+                              <button type="submit" class="btn btn-outline-danger tooltipped tooltipped-n" aria-label="Delete limit">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                  <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"></path>
+                                </svg>
+                                <span class="visually-hidden">Delete</span>
+                              </button>
+                            </div>
+                          </form>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+        </a>
+              </div>
+          </div>
+          <div class="row grid-row">
+              <div class="col-sm-6">
+                <a class="list-group-item py-3" aria-current="true">
+                  <div class="d-flex gap-2 w-100 justify-content-between">
+                    <div class="w-100">
+                      <h6 class="mb-0 opacity-75">Hostname</h6>
+                      <form class="row" action="/set-hostname" method="POST">
+                        <div class="input-group">
+                          <input type="text" class="form-control" id="hostnameForAccessKeys" name="hostnameForAccessKeys" placeholder="{{ server_information['hostnameForAccessKeys'] }}">
+                          <button type="submit" class="btn btn-outline-secondary tooltipped tooltipped-n" aria-label="Change hostname">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                              <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                              <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                            </svg>
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="col-sm-6">
+                <a class="list-group-item py-3" aria-current="true">
+              <div class="d-flex gap-2 w-100 justify-content-between">
+                <div class="w-100">
+                  <h6 class="mb-0 opacity-75">Port for new access key</h6>
+                  <form class="row" action="/set-port" method="POST">
+                    <div class="input-group">
+                      <input type="text" class="form-control" id="portForNewAccessKeys" name="portForNewAccessKeys" placeholder="{{ server_information['portForNewAccessKeys'] }}">
+                      <button type="submit" class="btn btn-outline-secondary tooltipped tooltipped-n" aria-label="Change port">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                          <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                          <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </a>
+              </div>
+          </div>
+          <div class="row grid-row">
+              <div class="col-sm-6">
+                <a class="list-group-item py-3" aria-current="true">
+                  <div class="d-flex gap-2 w-100 justify-content-between">
+                    <div class="w-100">
+                      <h6 class="mb-0 opacity-75">Data transferred / last 30 days</h6>
+                      <p class="mb-0">{{ "%.1f"|format((total_month_usage or 0) / 1000 / 1000 / 1000) }} GB</p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="col-sm-6">
+                <a class="list-group-item py-3" aria-current="true">
+              <div class="d-flex gap-2 w-100 justify-content-between">
+                <div class="w-100">
+                  <h6 class="mb-0 opacity-75">Created</h6>
+                  <p class="mb-0">{{ server_creation }}</p>
+                </div>
+              </div>
+            </a>
+              </div>
+          </div>
+          <div class="row grid-row">
+              <div class="col-sm-6">
+                <a class="list-group-item py-3" aria-current="true">
+              <div class="d-flex gap-2 w-100 justify-content-between">
+                <div class="w-100">
+                  <h6 class="mb-0 opacity-75">Server ID</h6>
+                  <p class="mb-0">{{ server_information['serverId'] }}</p>
+                </div>
+              </div>
+            </a>
+              </div>
+              <div class="col-sm-6">
+                <a class="list-group-item py-3" aria-current="true">
+              <div class="d-flex gap-2 w-100 justify-content-between">
+                <div>
+                  <h6 class="mb-0 opacity-75">Share anonymous metrics</h6>
+                  <form action="/set-metrics" method="POST">
+                    <div class="form-check form-check-inline">
+                      <input type="radio" class="form-check-input" name="metrics" value="true" id="metricsEnabled" autocomplete="off" {% if server_information['metricsEnabled'] %}checked{% endif %}>
+                      <label class="form-check-label" for="metricsEnabled">Enabled</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input type="radio" class="form-check-input" name="metrics" value="false" id="metricsDisabled" autocomplete="off" {% if not server_information['metricsEnabled'] %}checked{% endif %}>
+                      <label class="form-check-label" for="metricsDisabled">Disabled</label>
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Apply</button>
+                  </form>
+                </div>
+              </div>
+            </a>
+              </div>
+          </div>
+          <div class="row grid-row">
+              <div class="col-sm-12">
+                <a class="list-group-item py-3" aria-current="true">
+                <div class="d-flex gap-2 w-100 justify-content-between">
+                  <div class="w-100">
+                    <h6 class="mb-0 opacity-75">Server version</h6>
+                    <p class="mb-0">{{ server_information['version'] }}</p>
+                  </div>
+                </div>
+              </a>
+              </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="pt-5 my-5 text-muted border-top">
+        <a href="https://github.com/ilyhan2009/outline_web_manager">Outline Web Manager</a>, 2022
+      </footer>
+    </div>
+    <script src="/static/dist/js/copy-tooltip.js"></script>
+  </body>
+</html>
