@@ -209,6 +209,11 @@ async def logout():
     response.delete_cookie('outputJsonCookie')
     return response
 
+@app.get("/version")
+async def version():
+    version = "1.0.0"
+    return version
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8001)
