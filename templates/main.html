@@ -296,7 +296,7 @@
                 <div class="liquid-progress-track" title="{% if limit_gb > 0 %}{{ '%.1f'|format(usage_percent) }}% of limit used{% else %}Unlimited quota{% endif %}">
                   <div 
                     class="liquid-progress-fill {% if usage_percent > 85 %}warning{% endif %}" 
-                    style="width: {{ [usage_percent, 100]|min if effective_limit > 0 else ([usage_gb * 5, 100]|min) }}%;"
+                    {{ ('style="width: ' ~ ([usage_percent, 100]|min if effective_limit > 0 else ([usage_gb * 5, 100]|min)) ~ '%;"')|safe }}
                   ></div>
                 </div>
               </div>
@@ -565,7 +565,7 @@
                 <button 
                   type="button" 
                   class="liquid-btn liquid-btn-glass liquid-btn-icon sm" 
-                  onclick="copyToClipboard('{{ server_information['serverId'] }}', this, 'Server ID copied!')"
+                  onclick="copyToClipboard('{{ server_information.serverId }}', this, 'Server ID copied!')"
                   title="Copy Server ID"
                 >
                   <i class="hgi-stroke hgi-copy-01"></i>
@@ -680,22 +680,40 @@
     <!-- Interactive Scripts -->
     <script src="/static/dist/js/liquid-app.js"></script>
 
+    <!-- Initial Server Keys Data for Bandwidth Chart -->
+    <script type="application/json" id="keysJsonData">
+      [
+        {% for key in keys %}
+          {
+            "key_id": {{ key.key_id|tojson }},
+            "name": {{ (key.name if key.name else 'Key #' ~ key.key_id)|tojson }},
+            "used_bytes": {{ (key.used_bytes or 0)|tojson }}
+          }{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ]
+    </script>
+
     <!-- Initialize Bandwidth Chart with Live Key Data -->
     <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        const rawKeys = [
-          {% for key in keys %}
-            {
-              key_id: {{ key.key_id|tojson }},
-              name: {{ (key.name if key.name else 'Key #' ~ key.key_id)|tojson }},
-              used_bytes: {{ (key.used_bytes or 0)|tojson }}
-            }{% if not loop.last %},{% endif %}
-          {% endfor %}
-        ];
-        if (typeof initBandwidthChart === 'function') {
-          initBandwidthChart(rawKeys);
+      (function() {
+        function initChartFromData() {
+          const dataEl = document.getElementById('keysJsonData');
+          if (dataEl && typeof initBandwidthChart === 'function') {
+            try {
+              const rawKeys = JSON.parse(dataEl.textContent);
+              initBandwidthChart(rawKeys);
+            } catch (err) {
+              console.error('Failed to parse keys JSON for Chart.js', err);
+            }
+          }
         }
-      });
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initChartFromData);
+        } else {
+          initChartFromData();
+        }
+      })();
     </script>
   </body>
 </html>
