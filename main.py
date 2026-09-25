@@ -85,7 +85,7 @@ async def create_new_key(
 
 @app.post("/rename/{key_id}")
 async def rename_key_name(
-    key_id: int,
+    key_id: str,
     keyName: str = Form(),
     outline_client: OutlineVPN = Depends(get_outline_client),
 ):
@@ -98,7 +98,7 @@ async def rename_key_name(
 
 @app.post("/delete/{key_id}")
 async def delete_key(
-    key_id: int,
+    key_id: str,
     outline_client: OutlineVPN = Depends(get_outline_client),
 ):
     response = RedirectResponse('/', status_code=status.HTTP_302_FOUND)
@@ -181,7 +181,7 @@ async def delete_data_limit(
 
 @app.post("/set-data-limit/{key_id}")
 async def set_key_data_limit(
-    key_id: int, dataLimit: int = Form(),
+    key_id: str, dataLimit: int = Form(),
     outline_client: OutlineVPN = Depends(get_outline_client),
 ):
     response = RedirectResponse('/', status_code=status.HTTP_302_FOUND)
@@ -193,7 +193,7 @@ async def set_key_data_limit(
 
 @app.post("/delete-data-limit/{key_id}")
 async def delete_key_data_limit(
-    key_id: int,
+    key_id: str,
     outline_client: OutlineVPN = Depends(get_outline_client),
 ):
     response = RedirectResponse('/', status_code=status.HTTP_302_FOUND)

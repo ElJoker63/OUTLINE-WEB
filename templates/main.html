@@ -3,409 +3,578 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Hugo 0.108.0">
+    <meta name="description" content="Outline Web Manager - Liquid Glass iOS 27 Dashboard">
     <title>Outline Web Manager | {{ server_information['name'] }}</title>
     <link rel="icon" type="image/x-icon" href="/static/images/favicon.png">
 
-    <link href="/static/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Hugeicons Web Font CDN -->
+    <link rel="stylesheet" href="https://use.hugeicons.com/font/icons.css">
 
-    <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-      }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-
-      .b-example-divider {
-        height: 3rem;
-        background-color: rgba(0, 0, 0, .1);
-        border: solid rgba(0, 0, 0, .15);
-        border-width: 1px 0;
-        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
-      }
-
-      .b-example-vr {
-        flex-shrink: 0;
-        width: 1.5rem;
-        height: 100vh;
-      }
-
-      .bi {
-        vertical-align: -.125em;
-        fill: currentColor;
-      }
-
-      .nav-scroller {
-        position: relative;
-        z-index: 2;
-        height: 2.75rem;
-        overflow-y: hidden;
-      }
-
-      .nav-scroller .nav {
-        display: flex;
-        flex-wrap: nowrap;
-        padding-bottom: 1rem;
-        margin-top: -1px;
-        overflow-x: auto;
-        text-align: center;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
-      }
-
-      #keys-grid > .row > .col-sm-6 {
-        padding-bottom: .5rem;
-      }
-
-      #keys-grid > .row:not(:last-child) {
-        padding-bottom: .5rem;
-      }
-
-      #keys-grid > .row + .row {
-        padding-top: 1rem;
-        border-top: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color)!important;
-        border-left: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color)!important;
-        border-right: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color)!important;
-        border-radius: 0.5rem;
-      }
-
-      #keys-grid > .row:last-child {
-        padding-bottom: 0.5rem;
-        border-bottom: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color)!important;
-      }
-
-      #server-grid > .row > * {
-        border-top: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color)!important;
-        border-left: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color)!important;
-        border-right: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color)!important;
-        border-radius: 0.5rem;
-      }
-
-      #server-grid > .row:last-child > * {
-        border-bottom: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color)!important;
-      }
-    </style>
-
-    <!-- Custom styles for this template -->
-    <link href="/static/dist/css/main.css" rel="stylesheet">
-    <link href="/static/dist/css/grid.css" rel="stylesheet">
-    <link href="/static/dist/css/primer.core.tooltips.css" rel="stylesheet">
-
-    <script src="/static/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/static/dist/js/clipboard.min.js"></script>
+    <!-- Liquid Glass iOS 27 Design System -->
+    <link rel="stylesheet" href="/static/dist/css/liquid-glass.css">
   </head>
-
   <body>
-    <div class="col-lg-8 mx-auto p-3">
-      <header class="d-flex flex-wrap justify-content-center py-3 mb-5 border-bottom">
-        <a href="/" class="d-flex align-items-center mb-md-0 me-md-auto text-dark text-decoration-none">
-          <img class="me-2" src="/static/images/outlinevpn.png" alt="" width="32" height="32">
-          <span class="fs-4">{{ server_information['name'] }}</span>
+    <!-- Ambient Liquid Orbs Background -->
+    <div class="liquid-bg-container">
+      <div class="liquid-orb orb-1"></div>
+      <div class="liquid-orb orb-2"></div>
+      <div class="liquid-orb orb-3"></div>
+      <div class="liquid-orb orb-4"></div>
+    </div>
+
+    <!-- Main Content Wrapper -->
+    <div style="max-width: 1140px; margin: 0 auto; padding: 0 20px 60px 20px;">
+
+      <!-- Top Sticky Liquid Glass Navbar -->
+      <header class="liquid-navbar">
+        <a href="/" class="liquid-brand">
+          <div class="liquid-logo-wrap">
+            <img src="/static/images/outlinevpn.png" alt="Outline VPN">
+          </div>
+          <div class="liquid-brand-text">
+            <h1>{{ server_information['name'] }}</h1>
+            <div class="liquid-brand-badge">
+              <span class="liquid-pulse-dot"></span>
+              <span>Online &bull; Encrypted</span>
+            </div>
+          </div>
         </a>
 
-        <ul class="nav nav-pills">
-          <li class="nav-item">
-            <form action="/logout" method="POST">
-              <button type="submit" class="btn btn-link nav-link">Logout</button>
-            </form>
-          </li>
-        </ul>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <form action="/logout" method="POST" style="margin: 0;">
+            <button type="submit" class="liquid-btn liquid-btn-glass liquid-btn-sm" title="Log out of server">
+              <i class="hgi-stroke hgi-logout-01"></i>
+              <span>Logout</span>
+            </button>
+          </form>
+        </div>
       </header>
 
-      <main>
-        <h3 class="mb-4">Keys</h3>
-
-        <div id="keys-grid" class="mb-3">
-          <div class="row grid-row d-none d-sm-flex fw-bold">
-              <div class="col-sm-6">
-                <div class="row">
-                  <div class="col-auto">#</div>
-                  <div class="col">Name</div>
-                  <div class="col-auto">Usage</div>
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="row">
-                  <div class="col">Limit</div>
-                  <div class="col-auto">Actions</div>
-                </div>
-              </div>
+      <!-- Server Overview Hero Stats Grid -->
+      <section class="stats-grid">
+        <!-- Stat 1: Data Usage -->
+        <div class="liquid-card stat-widget">
+          <div class="stat-header">
+            <span class="stat-label">30-Day Transfer</span>
+            <div class="stat-icon cyan">
+              <i class="hgi-stroke hgi-database-01"></i>
             </div>
-          {%- for key in keys %}
-            <div class="row grid-row">
-              <div class="col-sm-6">
-                <div class="row">
-                  <div class="col-auto">
-                    {{ key.key_id }}
-                  </div>
-                  <div class="col">
-                    <form action="/rename/{{ key.key_id }}" method="POST">
-                      <div class="input-group">
-                        <input type="text" class="form-control" placeholder="{{ key.name }}" name="keyName">
-                        <button type="submit" class="btn btn-outline-secondary tooltipped tooltipped-n" aria-label="Rename">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                          </svg>
-                        </button>
-                      </div>
-                </form>
-                  </div>
-                  <div class="col-auto">
-                    <span>{{ "%.1f"|format((key.used_bytes or 0) / 1000 / 1000 / 1000) }} GB</span>
-                  </div>
+          </div>
+          <div>
+            <h2 class="stat-value">
+              {{ "%.2f"|format((total_month_usage or 0) / 1000 / 1000 / 1000) }}
+              <span class="stat-unit">GB</span>
+            </h2>
+            <div class="stat-footer">
+              <i class="hgi-stroke hgi-activity-01 sm" style="color: var(--accent-cyan);"></i>
+              <span>Trailing 30-day traffic</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stat 2: Active Keys -->
+        <div class="liquid-card stat-widget">
+          <div class="stat-header">
+            <span class="stat-label">Access Keys</span>
+            <div class="stat-icon emerald">
+              <i class="hgi-stroke hgi-key-01"></i>
+            </div>
+          </div>
+          <div>
+            <h2 class="stat-value">
+              {{ keys|length }}
+              <span class="stat-unit">active</span>
+            </h2>
+            <div class="stat-footer">
+              <i class="hgi-stroke hgi-shield-key sm" style="color: var(--accent-emerald);"></i>
+              <span>Connected devices</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stat 3: Host & Port -->
+        <div class="liquid-card stat-widget">
+          <div class="stat-header">
+            <span class="stat-label">Host &amp; Port</span>
+            <div class="stat-icon violet">
+              <i class="hgi-stroke hgi-server-stack-01"></i>
+            </div>
+          </div>
+          <div>
+            <h2 class="stat-value" style="font-size: 1.45rem; word-break: break-all;">
+              :{{ server_information['portForNewAccessKeys'] }}
+            </h2>
+            <div class="stat-footer" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+              <i class="hgi-stroke hgi-globe sm" style="color: var(--accent-violet);"></i>
+              <span style="overflow: hidden; text-overflow: ellipsis;">{{ server_information['hostnameForAccessKeys'] }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stat 4: Global Limit -->
+        <div class="liquid-card stat-widget">
+          <div class="stat-header">
+            <span class="stat-label">Global Limit</span>
+            <div class="stat-icon amber">
+              <i class="hgi-stroke hgi-shield-check"></i>
+            </div>
+          </div>
+          <div>
+            <h2 class="stat-value">
+              {% if 'accessKeyDataLimit' in server_information %}
+                {{ "%.0f"|format(server_information['accessKeyDataLimit']['bytes'] / 1000 / 1000 / 1000) }}
+                <span class="stat-unit">GB / key</span>
+              {% else %}
+                <span style="font-size: 1.35rem; color: #94a3b8;">Unlimited</span>
+              {% endif %}
+            </h2>
+            <div class="stat-footer">
+              <i class="hgi-stroke hgi-sliders-horizontal sm" style="color: var(--accent-amber);"></i>
+              <span>Default key quota</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick Add New Key Banner -->
+      <section class="liquid-card create-key-banner">
+        <form action="/add" method="POST">
+          <div class="liquid-input-group">
+            <div class="liquid-input-icon">
+              <i class="hgi-stroke hgi-key-01"></i>
+            </div>
+            <input 
+              type="text" 
+              class="liquid-input" 
+              id="newKeyName" 
+              name="newKeyName" 
+              placeholder="Enter name for new access key (e.g., iPhone 17 Pro, Office Laptop)..."
+              required
+              autocomplete="off"
+            >
+          </div>
+          <button type="submit" class="liquid-btn liquid-btn-primary">
+            <i class="hgi-stroke hgi-add-01"></i>
+            <span>Create Access Key</span>
+          </button>
+        </form>
+      </section>
+
+      <!-- Keys Management Section -->
+      <section style="margin-bottom: 48px;">
+        <div class="section-header">
+          <h2 class="section-title">
+            <i class="hgi-stroke hgi-shield-key"></i>
+            <span>Access Keys</span>
+            <span class="section-count-badge" id="keyCountBadge">{{ keys|length }}</span>
+          </h2>
+
+          <!-- Real-time Filter Search -->
+          <div class="filter-search-wrap">
+            <div class="liquid-input-group" style="padding: 2px;">
+              <div class="liquid-input-icon">
+                <i class="hgi-stroke hgi-search-01"></i>
+              </div>
+              <input 
+                type="text" 
+                class="liquid-input" 
+                id="keySearchInput" 
+                placeholder="Filter keys by name or ID..."
+                autocomplete="off"
+                style="padding: 6px 10px; font-size: 0.85rem;"
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="keys-container" id="keysListContainer">
+          {% if not keys %}
+            <div class="liquid-card" style="padding: 48px 24px; text-align: center;">
+              <div style="font-size: 3rem; color: var(--text-muted); margin-bottom: 16px;">
+                <i class="hgi-stroke hgi-key-01"></i>
+              </div>
+              <h3 style="color: #fff; margin-bottom: 8px;">No Access Keys Found</h3>
+              <p style="color: var(--text-secondary); max-width: 400px; margin: 0 auto 20px auto;">
+                Create your first access key above to securely connect Outline Client devices to this server.
+              </p>
+            </div>
+          {% endif %}
+
+          {% for key in keys %}
+            {% set effective_limit = key.data_limit or (server_information['accessKeyDataLimit']['bytes'] if 'accessKeyDataLimit' in server_information else 0) %}
+            {% set usage_gb = (key.used_bytes or 0) / 1000 / 1000 / 1000 %}
+            {% set limit_gb = effective_limit / 1000 / 1000 / 1000 if effective_limit > 0 else 0 %}
+            {% set usage_percent = ((key.used_bytes or 0) / effective_limit * 100) if effective_limit > 0 else 0 %}
+            {% set display_name = key.name if key.name else 'Key #' ~ key.key_id %}
+
+            <div class="liquid-card liquid-card-hover key-card" data-key-id="{{ key.key_id }}" data-key-name="{{ display_name }}">
+              <!-- Col 1: Key ID Badge -->
+              <div>
+                <div class="key-id-pill" title="Key ID: {{ key.key_id }}">
+                  #{{ key.key_id }}
                 </div>
               </div>
-              <div class="col-sm-6">
-                <div class="row">
-                  <div class="col">
-                    <div class="row">
-                      <div class="col" style="padding-right: 0;">
-                        <form action="/set-data-limit/{{ key.key_id }}" method="POST">
-                          <div class="input-group">
-                            <input type="text" class="form-control" placeholder="{% if key.data_limit or 'accessKeyDataLimit' in server_information %}{{ '%.0f'|format((key.data_limit or server_information['accessKeyDataLimit']['bytes']) / 1000 / 1000 / 1000) }} GB{% else %}<Enter personal limit (GB)>{% endif %}" name="dataLimit">
-                            <button type="submit" class="btn btn-outline-secondary tooltipped tooltipped-n" aria-label="Change limit">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                              </svg>
-                            </button>
-                          </div>
-                        </form>
-                      </div>
-                      {% if key.data_limit %}
-                        <div class="col-auto" style="padding-right: 0;">
-                          <form action="/delete-data-limit/{{ key.key_id }}" method="POST">
-                            <button type="submit" class="btn btn-outline-danger tooltipped tooltipped-n" aria-label="Delete limit">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
-                                  <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"></path>
-                              </svg>
-                              <span class="visually-hidden">Delete</span>
-                            </button>
-                          </form>
-                        </div>
-                      {% endif %}
-                    </div>
+
+              <!-- Col 2: Name & Rename Form -->
+              <div class="key-name-col">
+                <form action="/rename/{{ key.key_id }}" method="POST" style="margin: 0;">
+                  <div class="liquid-input-group" style="padding: 2px;">
+                    <input 
+                      type="text" 
+                      class="liquid-input" 
+                      name="keyName" 
+                      placeholder="{{ display_name }}" 
+                      value="{{ key.name }}"
+                      title="Click to rename key"
+                      style="font-weight: 600; padding: 6px 10px;"
+                    >
+                    <button type="submit" class="liquid-btn liquid-btn-glass liquid-btn-icon sm" title="Save new key name" aria-label="Rename Key">
+                      <i class="hgi-stroke hgi-pencil-edit-01"></i>
+                    </button>
                   </div>
-                  <div class="col-auto">
-                    <form action="/delete/{{ key.key_id }}" method="POST">
-                      <div class="btn-group" role="group" aria-label="Actions">
-                        <button type="button" class="btn btn-outline-secondary btn-clipboard tooltipped tooltipped-n" data-clipboard-text="{{ key.access_url }}" aria-label="Copy Access Url">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard-fill" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M10 1.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-1Zm-5 0A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5v1A1.5 1.5 0 0 1 9.5 4h-3A1.5 1.5 0 0 1 5 2.5v-1Zm-2 0h1v1A2.5 2.5 0 0 0 6.5 5h3A2.5 2.5 0 0 0 12 2.5v-1h1a2 2 0 0 1 2 2V14a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3.5a2 2 0 0 1 2-2Z"></path>
-                          </svg>
-                          <span class="visually-hidden">Copy Access Url</span>
-                        </button>
-                        <button type="submit" class="btn btn-danger tooltipped tooltipped-n" aria-label="Delete">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
-                                <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"></path>
-                            </svg>
-                            <span class="visually-hidden">Delete</span>
-                          </a>
-                        </button>
-                      </div>
-                    </form>
-                  </div>
+                </form>
+              </div>
+
+              <!-- Col 3: Usage & Progress Meter -->
+              <div class="key-usage-col">
+                <div class="key-usage-val">
+                  <i class="hgi-stroke hgi-database-01"></i>
+                  <span>{{ "%.2f"|format(usage_gb) }} GB</span>
+                  {% if limit_gb > 0 %}
+                    <span style="color: var(--text-muted); font-size: 0.8rem; font-weight: 500;">/ {{ "%.0f"|format(limit_gb) }} GB</span>
+                  {% endif %}
                 </div>
+                <div class="liquid-progress-track" title="{% if limit_gb > 0 %}{{ '%.1f'|format(usage_percent) }}% of limit used{% else %}Unlimited quota{% endif %}">
+                  <div 
+                    class="liquid-progress-fill {% if usage_percent > 85 %}warning{% endif %}" 
+                    style="width: {{ [usage_percent, 100]|min if effective_limit > 0 else ([usage_gb * 5, 100]|min) }}%;"
+                  ></div>
+                </div>
+              </div>
+
+              <!-- Col 4: Personal Data Limit -->
+              <div class="key-limit-col">
+                <form action="/set-data-limit/{{ key.key_id }}" method="POST" style="margin: 0; display: flex; align-items: center; gap: 6px; width: 100%;">
+                  <div class="liquid-input-group" style="padding: 2px; flex: 1;">
+                    <input 
+                      type="number" 
+                      class="liquid-input" 
+                      name="dataLimit" 
+                      placeholder="{% if key.data_limit %}{{ '%.0f'|format(key.data_limit / 1000 / 1000 / 1000) }} GB{% elif 'accessKeyDataLimit' in server_information %}{{ '%.0f'|format(server_information['accessKeyDataLimit']['bytes'] / 1000 / 1000 / 1000) }} GB (Global){% else %}No limit{% endif %}"
+                      title="Set personal data transfer limit (GB)"
+                      style="padding: 6px 10px; font-size: 0.85rem;"
+                    >
+                    <button type="submit" class="liquid-btn liquid-btn-glass liquid-btn-icon sm" title="Update key limit" aria-label="Set Limit">
+                      <i class="hgi-stroke hgi-pencil-edit-01"></i>
+                    </button>
+                  </div>
+                </form>
+
+                {% if key.data_limit %}
+                  <form action="/delete-data-limit/{{ key.key_id }}" method="POST" style="margin: 0;">
+                    <button type="submit" class="liquid-btn liquid-btn-danger liquid-btn-icon sm" title="Remove individual limit" aria-label="Delete Limit">
+                      <i class="hgi-stroke hgi-delete-02"></i>
+                    </button>
+                  </form>
+                {% endif %}
+              </div>
+
+              <!-- Col 5: Actions (Copy, QR, Delete) -->
+              <div class="key-actions-col">
+                <!-- QR Code View Modal Trigger -->
+                <button 
+                  type="button" 
+                  class="liquid-btn liquid-btn-glass liquid-btn-icon" 
+                  onclick="showQrModal('{{ key.access_url }}', '{{ display_name }}')"
+                  title="Show QR Code for Outline Client"
+                  aria-label="Show QR Code"
+                >
+                  <i class="hgi-stroke hgi-qr-code"></i>
+                </button>
+
+                <!-- Copy Access URL -->
+                <button 
+                  type="button" 
+                  class="liquid-btn liquid-btn-glass liquid-btn-icon" 
+                  onclick="copyToClipboard('{{ key.access_url }}', this, 'Access Key URL copied!')"
+                  title="Copy Access Key URL"
+                  aria-label="Copy Access URL"
+                >
+                  <i class="hgi-stroke hgi-copy-01"></i>
+                </button>
+
+                <!-- Delete Key Form with Confirmation -->
+                <form id="deleteForm-{{ key.key_id }}" action="/delete/{{ key.key_id }}" method="POST" style="margin: 0;">
+                  <button 
+                    type="button" 
+                    class="liquid-btn liquid-btn-danger liquid-btn-icon" 
+                    onclick="confirmDeleteKey('deleteForm-{{ key.key_id }}', '{{ display_name }}')"
+                    title="Delete Key"
+                    aria-label="Delete Key"
+                  >
+                    <i class="hgi-stroke hgi-delete-02"></i>
+                  </button>
+                </form>
               </div>
             </div>
           {% endfor %}
         </div>
+      </section>
 
-        <form class="row mb-5" action="/add" method="POST">
-          <div class="input-group">
-            <input type="text" class="form-control" id="newKeyName" name="newKeyName" placeholder="<Enter new key name>">
-            <button type="submit" class="btn btn-success">Create new key</button>
-          </div>
-        </form>
+      <!-- Server Configuration Section -->
+      <section class="liquid-card server-config-card">
+        <div class="section-header" style="margin-bottom: 24px;">
+          <h2 class="section-title">
+            <i class="hgi-stroke hgi-server-cog"></i>
+            <span>Server Configuration</span>
+          </h2>
+          <span class="liquid-brand-badge" style="font-size: 0.8rem;">
+            <span>v{{ server_information['version'] }}</span>
+          </span>
+        </div>
 
-        <h3>Server</h3>
-        <div id="server-grid">
-          <div class="row grid-row">
-              <div class="col-sm-6">
-                <a class="list-group-item py-3" aria-current="true">
-              <div class="d-flex gap-2 w-100 justify-content-between">
-                <div class="w-100">
-                  <h6 class="mb-0 opacity-75">Server name</h6>
-                  <form class="row" action="/set-server-name" method="POST">
-                    <div class="input-group">
-                      <input type="text" class="form-control" id="serverName" name="serverName" placeholder="{{ server_information['name'] }}">
-                      <button type="submit" class="btn btn-outline-secondary tooltipped tooltipped-n" aria-label="Rename">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                          <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                          <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                        </svg>
-                      </button>
-                    </div>
-                  </form>
-                </div>
+        <div class="config-grid">
+          <!-- Setting: Server Name -->
+          <div class="config-item">
+            <div class="config-label">
+              <i class="hgi-stroke hgi-server-stack-01"></i>
+              <span>Server Name</span>
+            </div>
+            <form action="/set-server-name" method="POST">
+              <div class="liquid-input-group">
+                <input 
+                  type="text" 
+                  class="liquid-input" 
+                  id="serverName" 
+                  name="serverName" 
+                  placeholder="{{ server_information['name'] }}"
+                  value="{{ server_information['name'] }}"
+                  required
+                >
+                <button type="submit" class="liquid-btn liquid-btn-glass liquid-btn-sm">
+                  <i class="hgi-stroke hgi-pencil-edit-01"></i>
+                  <span>Save</span>
+                </button>
               </div>
-            </a>
-              </div>
-              <div class="col-sm-6">
-                <a class="list-group-item py-3" aria-current="true">
-              <div class="d-flex gap-2 w-100 justify-content-between">
-                <div class="w-100">
-                  <h6 class="mb-0 opacity-75">Data limits</h6>
-                  <div class="row">
-                    <div class="col">
-                      <form action="/set-data-limit" method="POST">
-                        <div class="input-group">
-                          <input type="text" class="form-control" id="dataLimitForAllKeys" name="dataLimitForAllKeys" placeholder="{% if 'accessKeyDataLimit' in server_information %}{{ '%.0f'|format(server_information['accessKeyDataLimit']['bytes'] / 1000 / 1000 / 1000) }} GB{% else %}<Set a 30 day trailing data transfer limit (GB) for access keys>{% endif %}">
-                          <button type="submit" class="btn btn-outline-secondary tooltipped tooltipped-n" aria-label="Set global limit">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                              <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                              <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                            </svg>
-                          </button>
-                        </div>
-                      </form>
-                    </div>
-                    {% if 'accessKeyDataLimit' in server_information %}
-                      <div class="col-auto" style="padding-left: 0;">
-                          <form action="/delete-data-limit" method="POST">
-                            <div class="input-group">
-                              <button type="submit" class="btn btn-outline-danger tooltipped tooltipped-n" aria-label="Delete limit">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
-                                  <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"></path>
-                                </svg>
-                                <span class="visually-hidden">Delete</span>
-                              </button>
-                            </div>
-                          </form>
-                      </div>
-                    {% endif %}
-                  </div>
-                </div>
-              </div>
-        </a>
-              </div>
+            </form>
           </div>
-          <div class="row grid-row">
-              <div class="col-sm-6">
-                <a class="list-group-item py-3" aria-current="true">
-                  <div class="d-flex gap-2 w-100 justify-content-between">
-                    <div class="w-100">
-                      <h6 class="mb-0 opacity-75">Hostname</h6>
-                      <form class="row" action="/set-hostname" method="POST">
-                        <div class="input-group">
-                          <input type="text" class="form-control" id="hostnameForAccessKeys" name="hostnameForAccessKeys" placeholder="{{ server_information['hostnameForAccessKeys'] }}">
-                          <button type="submit" class="btn btn-outline-secondary tooltipped tooltipped-n" aria-label="Change hostname">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                              <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                              <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                            </svg>
-                          </button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </a>
-              </div>
-              <div class="col-sm-6">
-                <a class="list-group-item py-3" aria-current="true">
-              <div class="d-flex gap-2 w-100 justify-content-between">
-                <div class="w-100">
-                  <h6 class="mb-0 opacity-75">Port for new access key</h6>
-                  <form class="row" action="/set-port" method="POST">
-                    <div class="input-group">
-                      <input type="text" class="form-control" id="portForNewAccessKeys" name="portForNewAccessKeys" placeholder="{{ server_information['portForNewAccessKeys'] }}">
-                      <button type="submit" class="btn btn-outline-secondary tooltipped tooltipped-n" aria-label="Change port">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                          <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                          <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                        </svg>
-                      </button>
-                    </div>
-                  </form>
+
+          <!-- Setting: Global 30-Day Limit -->
+          <div class="config-item">
+            <div class="config-label">
+              <i class="hgi-stroke hgi-database-01"></i>
+              <span>Global 30-Day Data Limit</span>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <form action="/set-data-limit" method="POST" style="flex: 1; margin: 0;">
+                <div class="liquid-input-group">
+                  <input 
+                    type="number" 
+                    class="liquid-input" 
+                    id="dataLimitForAllKeys" 
+                    name="dataLimitForAllKeys" 
+                    placeholder="{% if 'accessKeyDataLimit' in server_information %}{{ '%.0f'|format(server_information['accessKeyDataLimit']['bytes'] / 1000 / 1000 / 1000) }} GB{% else %}Set limit for all keys (GB){% endif %}"
+                    required
+                  >
+                  <button type="submit" class="liquid-btn liquid-btn-glass liquid-btn-sm">
+                    <i class="hgi-stroke hgi-pencil-edit-01"></i>
+                    <span>Set</span>
+                  </button>
                 </div>
-              </div>
-            </a>
-              </div>
+              </form>
+
+              {% if 'accessKeyDataLimit' in server_information %}
+                <form action="/delete-data-limit" method="POST" style="margin: 0;">
+                  <button type="submit" class="liquid-btn liquid-btn-danger liquid-btn-icon" title="Delete global data limit">
+                    <i class="hgi-stroke hgi-delete-02"></i>
+                  </button>
+                </form>
+              {% endif %}
+            </div>
           </div>
-          <div class="row grid-row">
-              <div class="col-sm-6">
-                <a class="list-group-item py-3" aria-current="true">
-                  <div class="d-flex gap-2 w-100 justify-content-between">
-                    <div class="w-100">
-                      <h6 class="mb-0 opacity-75">Data transferred / last 30 days</h6>
-                      <p class="mb-0">{{ "%.1f"|format((total_month_usage or 0) / 1000 / 1000 / 1000) }} GB</p>
-                    </div>
-                  </div>
-                </a>
+
+          <!-- Setting: Hostname -->
+          <div class="config-item">
+            <div class="config-label">
+              <i class="hgi-stroke hgi-globe"></i>
+              <span>Hostname for Access Keys</span>
+            </div>
+            <form action="/set-hostname" method="POST">
+              <div class="liquid-input-group">
+                <input 
+                  type="text" 
+                  class="liquid-input" 
+                  id="hostnameForAccessKeys" 
+                  name="hostnameForAccessKeys" 
+                  placeholder="{{ server_information['hostnameForAccessKeys'] }}"
+                  value="{{ server_information['hostnameForAccessKeys'] }}"
+                  required
+                >
+                <button type="submit" class="liquid-btn liquid-btn-glass liquid-btn-sm">
+                  <i class="hgi-stroke hgi-pencil-edit-01"></i>
+                  <span>Save</span>
+                </button>
               </div>
-              <div class="col-sm-6">
-                <a class="list-group-item py-3" aria-current="true">
-              <div class="d-flex gap-2 w-100 justify-content-between">
-                <div class="w-100">
-                  <h6 class="mb-0 opacity-75">Created</h6>
-                  <p class="mb-0">{{ server_creation }}</p>
-                </div>
-              </div>
-            </a>
-              </div>
+            </form>
           </div>
-          <div class="row grid-row">
-              <div class="col-sm-6">
-                <a class="list-group-item py-3" aria-current="true">
-              <div class="d-flex gap-2 w-100 justify-content-between">
-                <div class="w-100">
-                  <h6 class="mb-0 opacity-75">Server ID</h6>
-                  <p class="mb-0">{{ server_information['serverId'] }}</p>
-                </div>
+
+          <!-- Setting: Port for New Keys -->
+          <div class="config-item">
+            <div class="config-label">
+              <i class="hgi-stroke hgi-router-01"></i>
+              <span>Port for New Access Keys</span>
+            </div>
+            <form action="/set-port" method="POST">
+              <div class="liquid-input-group">
+                <input 
+                  type="number" 
+                  class="liquid-input" 
+                  id="portForNewAccessKeys" 
+                  name="portForNewAccessKeys" 
+                  placeholder="{{ server_information['portForNewAccessKeys'] }}"
+                  value="{{ server_information['portForNewAccessKeys'] }}"
+                  required
+                >
+                <button type="submit" class="liquid-btn liquid-btn-glass liquid-btn-sm">
+                  <i class="hgi-stroke hgi-pencil-edit-01"></i>
+                  <span>Save</span>
+                </button>
               </div>
-            </a>
-              </div>
-              <div class="col-sm-6">
-                <a class="list-group-item py-3" aria-current="true">
-              <div class="d-flex gap-2 w-100 justify-content-between">
-                <div>
-                  <h6 class="mb-0 opacity-75">Share anonymous metrics</h6>
-                  <form action="/set-metrics" method="POST">
-                    <div class="form-check form-check-inline">
-                      <input type="radio" class="form-check-input" name="metrics" value="true" id="metricsEnabled" autocomplete="off" {% if server_information['metricsEnabled'] %}checked{% endif %}>
-                      <label class="form-check-label" for="metricsEnabled">Enabled</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <input type="radio" class="form-check-input" name="metrics" value="false" id="metricsDisabled" autocomplete="off" {% if not server_information['metricsEnabled'] %}checked{% endif %}>
-                      <label class="form-check-label" for="metricsDisabled">Disabled</label>
-                    </div>
-                    <button type="submit" class="btn btn-secondary">Apply</button>
-                  </form>
-                </div>
-              </div>
-            </a>
-              </div>
+            </form>
           </div>
-          <div class="row grid-row">
-              <div class="col-sm-12">
-                <a class="list-group-item py-3" aria-current="true">
-                <div class="d-flex gap-2 w-100 justify-content-between">
-                  <div class="w-100">
-                    <h6 class="mb-0 opacity-75">Server version</h6>
-                    <p class="mb-0">{{ server_information['version'] }}</p>
-                  </div>
-                </div>
-              </a>
+
+          <!-- Setting: Anonymous Metrics -->
+          <div class="config-item">
+            <div class="config-label">
+              <i class="hgi-stroke hgi-activity-01"></i>
+              <span>Share Anonymous Metrics</span>
+            </div>
+            <form action="/set-metrics" method="POST" style="display: flex; gap: 10px; align-items: center;">
+              <div class="metrics-segmented" style="flex: 1;">
+                <input 
+                  type="radio" 
+                  name="metrics" 
+                  value="true" 
+                  id="metricsEnabled" 
+                  {% if server_information['metricsEnabled'] %}checked{% endif %}
+                >
+                <label for="metricsEnabled">
+                  <i class="hgi-stroke hgi-checkmark-circle-01 sm"></i>
+                  <span>Enabled</span>
+                </label>
+
+                <input 
+                  type="radio" 
+                  name="metrics" 
+                  value="false" 
+                  id="metricsDisabled" 
+                  {% if not server_information['metricsEnabled'] %}checked{% endif %}
+                >
+                <label for="metricsDisabled">
+                  <i class="hgi-stroke hgi-cancel-circle sm"></i>
+                  <span>Disabled</span>
+                </label>
               </div>
+
+              <button type="submit" class="liquid-btn liquid-btn-glass liquid-btn-sm">
+                <span>Apply</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- Setting: Server Metadata -->
+          <div class="config-item">
+            <div class="config-label">
+              <i class="hgi-stroke hgi-fingerprint"></i>
+              <span>Server ID &amp; Created Date</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                <code class="config-info-val" style="font-size: 0.8rem;">{{ server_information['serverId'] }}</code>
+                <button 
+                  type="button" 
+                  class="liquid-btn liquid-btn-glass liquid-btn-icon sm" 
+                  onclick="copyToClipboard('{{ server_information['serverId'] }}', this, 'Server ID copied!')"
+                  title="Copy Server ID"
+                >
+                  <i class="hgi-stroke hgi-copy-01"></i>
+                </button>
+              </div>
+              <span style="font-size: 0.78rem; color: var(--text-muted);">
+                Created: {{ server_creation }}
+              </span>
+            </div>
           </div>
         </div>
-      </main>
+      </section>
 
-      <footer class="pt-5 my-5 text-muted border-top">
-        <!--a href="https://github.com/ilyhan2009/outline_web_manager"-->Outline Web Manager<!--/a-->, 2022
+      <!-- App Footer -->
+      <footer class="liquid-footer">
+        <i class="hgi-stroke hgi-shield-key" style="color: var(--accent-cyan);"></i>
+        <span>Outline Web Manager &bull; iOS 27 Liquid Glass Edition</span>
       </footer>
     </div>
-    <script src="/static/dist/js/copy-tooltip.js"></script>
+
+    <!-- Liquid Toast Dynamic Container -->
+    <div id="liquid-toast-container" class="liquid-toast-container"></div>
+
+    <!-- QR Code Liquid Glass Modal -->
+    <div id="qrModal" class="glass-modal-backdrop">
+      <div class="glass-modal">
+        <div class="glass-modal-header">
+          <h3 class="glass-modal-title">
+            <i class="hgi-stroke hgi-qr-code" style="color: var(--accent-cyan);"></i>
+            <span id="qrKeyTitle">Access Key QR</span>
+          </h3>
+          <button type="button" class="liquid-btn liquid-btn-glass liquid-btn-icon sm" onclick="closeQrModal()">
+            <i class="hgi-stroke hgi-cancel-01"></i>
+          </button>
+        </div>
+        <div class="glass-modal-body" style="text-align: center;">
+          <p style="margin-bottom: 18px; font-size: 0.88rem;">
+            Scan this code with the <strong>Outline Client app</strong> on iOS, Android, macOS, or Windows to connect instantly.
+          </p>
+          <div id="qrCodeContainer" style="display: flex; justify-content: center; margin-bottom: 20px;"></div>
+          <div class="liquid-input-group" style="padding: 2px;">
+            <input type="text" class="liquid-input mono" id="qrAccessUrl" readonly style="font-size: 0.78rem;">
+            <button type="button" class="liquid-btn liquid-btn-glass liquid-btn-sm" onclick="copyToClipboard(document.getElementById('qrAccessUrl').value, this, 'Access URL copied!')">
+              <i class="hgi-stroke hgi-copy-01"></i>
+              <span>Copy</span>
+            </button>
+          </div>
+        </div>
+        <div class="glass-modal-footer">
+          <button type="button" class="liquid-btn liquid-btn-glass" onclick="closeQrModal()">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteConfirmModal" class="glass-modal-backdrop">
+      <div class="glass-modal">
+        <div class="glass-modal-header">
+          <h3 class="glass-modal-title" style="color: #fb7185;">
+            <i class="hgi-stroke hgi-alert-triangle"></i>
+            <span>Confirm Deletion</span>
+          </h3>
+          <button type="button" class="liquid-btn liquid-btn-glass liquid-btn-icon sm" onclick="closeDeleteModal()">
+            <i class="hgi-stroke hgi-cancel-01"></i>
+          </button>
+        </div>
+        <div class="glass-modal-body" id="deleteModalText">
+          Are you sure you want to delete this access key? This action cannot be undone.
+        </div>
+        <div class="glass-modal-footer">
+          <button type="button" class="liquid-btn liquid-btn-glass" onclick="closeDeleteModal()">Cancel</button>
+          <button type="button" class="liquid-btn liquid-btn-danger" onclick="executeDeleteKey()">
+            <i class="hgi-stroke hgi-delete-02"></i>
+            <span>Delete Key</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Liquid Glass Interactive Scripts -->
+    <script src="/static/dist/js/liquid-app.js"></script>
   </body>
 </html>
