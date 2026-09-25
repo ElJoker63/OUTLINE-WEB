@@ -731,9 +731,267 @@ function registerPwaServiceWorker() {
 }
 
 // --------------------------------------------------------------------------
+// Animated Background Network Mesh (Simulates VPN Tunnels & Packet Traffic)
+// --------------------------------------------------------------------------
+function initNetworkConnectionsCanvas() {
+  const container = document.querySelector('.liquid-bg-container');
+  if (!container) return;
+
+  let canvas = document.getElementById('networkCanvas');
+  if (!canvas) {
+    canvas = document.createElement('canvas');
+    canvas.id = 'networkCanvas';
+    canvas.className = 'network-bg-canvas';
+    container.appendChild(canvas);
+  }
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  let width = 0;
+  let height = 0;
+  let dpr = Math.min(window.devicePixelRatio || 1, 2);
+  let animationFrameId = null;
+
+  // Mouse interaction
+  const mouse = { x: -1000, y: -1000, active: false };
+  let mouseTimer = null;
+
+  window.addEventListener('mousemove', (e) => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+    mouse.active = true;
+    clearTimeout(mouseTimer);
+    mouseTimer = setTimeout(() => {
+      mouse.active = false;
+    }, 3000);
+  }, { passive: true });
+
+  window.addEventListener('mouseleave', () => {
+    mouse.active = false;
+    mouse.x = -1000;
+    mouse.y = -1000;
+  });
+
+  const colors = [
+    { r: 0, g: 242, b: 254 },    // Electric Cyan
+    { r: 56, g: 189, b: 248 },   // Vivid Sky Blue
+    { r: 52, g: 211, b: 153 },   // Emerald Green
+    { r: 168, g: 85, b: 247 },   // Violet Glow
+  ];
+
+  let particles = [];
+  let packets = [];
+
+  class Particle {
+    constructor(isHub = false) {
+      this.isHub = isHub;
+      this.reset();
+    }
+
+    reset() {
+      this.x = Math.random() * (width || window.innerWidth || 1200);
+      this.y = Math.random() * (height || window.innerHeight || 800);
+      const speed = this.isHub ? 0.3 : (0.4 + Math.random() * 0.5);
+      const angle = Math.random() * Math.PI * 2;
+      this.vx = Math.cos(angle) * speed;
+      this.vy = Math.sin(angle) * speed;
+
+      this.color = colors[Math.floor(Math.random() * colors.length)];
+      this.radius = this.isHub ? (3.8 + Math.random() * 1.2) : (2.2 + Math.random() * 1.2);
+      this.baseAlpha = this.isHub ? 0.95 : (0.65 + Math.random() * 0.3);
+      this.pulsePhase = Math.random() * Math.PI * 2;
+      this.pulseSpeed = 0.03 + Math.random() * 0.03;
+    }
+
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+
+      if (this.x < -30) this.x = width + 30;
+      else if (this.x > width + 30) this.x = -30;
+      if (this.y < -30) this.y = height + 30;
+      else if (this.y > height + 30) this.y = -30;
+
+      this.pulsePhase += this.pulseSpeed;
+    }
+
+    draw() {
+      const alphaPulse = this.baseAlpha + Math.sin(this.pulsePhase) * 0.2;
+      const c = this.color;
+
+      if (this.isHub) {
+        // Glowing radar pulse ring around server hubs
+        const ringRadius = this.radius * 3.2 + Math.sin(this.pulsePhase) * 5;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, Math.max(1, ringRadius), 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(${c.r}, ${c.g}, ${c.b}, ${Math.max(0.1, alphaPulse * 0.55)})`;
+        ctx.lineWidth = 1.4;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius * 2.2, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${c.r}, ${c.g}, ${c.b}, 0.28)`;
+        ctx.fill();
+      }
+
+      // Core particle dot
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${c.r}, ${c.g}, ${c.b}, ${Math.max(0.4, alphaPulse)})`;
+      ctx.shadowColor = `rgba(${c.r}, ${c.g}, ${c.b}, 0.8)`;
+      ctx.shadowBlur = this.isHub ? 14 : 8;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+  }
+
+  class Packet {
+    constructor(fromNode, toNode) {
+      this.from = fromNode;
+      this.to = toNode;
+      this.progress = 0;
+      this.speed = 0.02 + Math.random() * 0.02;
+      this.color = fromNode.color;
+    }
+
+    update() {
+      this.progress += this.speed;
+      return this.progress < 1;
+    }
+
+    draw() {
+      const curX = this.from.x + (this.to.x - this.from.x) * this.progress;
+      const curY = this.from.y + (this.to.y - this.from.y) * this.progress;
+      const c = this.color;
+
+      // Outer light corona
+      ctx.beginPath();
+      ctx.arc(curX, curY, 8, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${c.r}, ${c.g}, ${c.b}, 0.6)`;
+      ctx.fill();
+
+      // Glowing data pulse head
+      ctx.beginPath();
+      ctx.arc(curX, curY, 3, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.shadowColor = `rgba(${c.r}, ${c.g}, ${c.b}, 1)`;
+      ctx.shadowBlur = 12;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+  }
+
+  function reinitParticles() {
+    const area = width * height;
+    const count = Math.min(75, Math.max(35, Math.floor(area / 20000)));
+    const hubCount = Math.max(5, Math.floor(count * 0.15));
+
+    particles = [];
+    for (let i = 0; i < count; i++) {
+      particles.push(new Particle(i < hubCount));
+    }
+    packets = [];
+  }
+
+  function resize() {
+    width = window.innerWidth || document.documentElement.clientWidth || 1920;
+    height = window.innerHeight || document.documentElement.clientHeight || 1080;
+    canvas.width = Math.floor(width * dpr);
+    canvas.height = Math.floor(height * dpr);
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
+    reinitParticles();
+  }
+
+  let lastPacketSpawn = 0;
+  const maxConnectDist = 155;
+  const mouseConnectDist = 185;
+
+  function render(timestamp) {
+    animationFrameId = requestAnimationFrame(render);
+
+    ctx.clearRect(0, 0, width, height);
+
+    // Update and draw particles
+    for (let i = 0; i < particles.length; i++) {
+      particles[i].update();
+      particles[i].draw();
+    }
+
+    // Connect close nodes (tunnel links)
+    const activeConnections = [];
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < maxConnectDist) {
+          activeConnections.push({ a: particles[i], b: particles[j] });
+          const opacity = (1 - dist / maxConnectDist) * 0.45;
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(0, 242, 254, ${opacity})`;
+          ctx.lineWidth = 1.1;
+          ctx.stroke();
+        }
+      }
+
+      // Connect to mouse if active
+      if (mouse.active) {
+        const mdx = particles[i].x - mouse.x;
+        const mdy = particles[i].y - mouse.y;
+        const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+        if (mdist < mouseConnectDist) {
+          const mOpacity = (1 - mdist / mouseConnectDist) * 0.55;
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(mouse.x, mouse.y);
+          ctx.strokeStyle = `rgba(52, 211, 153, ${mOpacity})`;
+          ctx.lineWidth = 1.4;
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Spawn packets moving across active tunnels
+    if (timestamp - lastPacketSpawn > 650 && activeConnections.length > 0) {
+      if (packets.length < 12) {
+        const link = activeConnections[Math.floor(Math.random() * activeConnections.length)];
+        packets.push(new Packet(link.a, link.b));
+      }
+      lastPacketSpawn = timestamp;
+    }
+
+    // Update and draw packets
+    for (let i = packets.length - 1; i >= 0; i--) {
+      if (packets[i].update()) {
+        packets[i].draw();
+      } else {
+        packets.splice(i, 1);
+      }
+    }
+  }
+
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(resize, 100);
+  }, { passive: true });
+
+  resize();
+  animationFrameId = requestAnimationFrame(render);
+}
+
+// --------------------------------------------------------------------------
 // Initialization on Page Load
 // --------------------------------------------------------------------------
-document.addEventListener('DOMContentLoaded', () => {
+function initLiquidApp() {
+  initNetworkConnectionsCanvas();
   initKeyFilter();
   initSignInHelpers();
   initAjaxKeyActions();
@@ -763,4 +1021,10 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   });
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initLiquidApp);
+} else {
+  initLiquidApp();
+}

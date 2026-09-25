@@ -88,7 +88,7 @@ html, body {
 .liquid-bg-container {
   position: fixed;
   inset: 0;
-  z-index: -1;
+  z-index: 0;
   overflow: hidden;
   pointer-events: none;
 }
@@ -110,6 +110,17 @@ html, body {
   background-image: radial-gradient(#fff 1px, transparent 1px);
   background-size: 24px 24px;
   z-index: 2;
+}
+
+/* Animated Mesh / Network Connections Canvas */
+.network-bg-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.85;
 }
 
 .liquid-orb {
@@ -1061,6 +1072,8 @@ html, body {
   align-items: center;
   justify-content: center;
   padding: 24px;
+  position: relative;
+  z-index: 5;
 }
 
 .signin-card {

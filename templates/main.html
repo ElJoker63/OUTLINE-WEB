@@ -23,6 +23,7 @@
   <body>
     <!-- Ambient Background -->
     <div class="liquid-bg-container">
+      <canvas id="networkCanvas" class="network-bg-canvas"></canvas>
       <div class="liquid-orb orb-1"></div>
       <div class="liquid-orb orb-2"></div>
       <div class="liquid-orb orb-3"></div>
@@ -30,7 +31,7 @@
     </div>
 
     <!-- Main Content Wrapper -->
-    <div style="max-width: 1140px; margin: 0 auto; padding: 0 20px 60px 20px;">
+    <div style="max-width: 1140px; margin: 0 auto; padding: 0 20px 60px 20px; position: relative; z-index: 5;">
 
       <!-- Top Navigation -->
       <header class="liquid-navbar">
