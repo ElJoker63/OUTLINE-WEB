@@ -282,6 +282,37 @@ async function togglePauseKey(keyId, btnElement) {
 
     if (data.status === 'ok') {
       const isPaused = data.paused;
+      const card = btnElement ? btnElement.closest('.key-card') : document.querySelector(`.key-card[data-key-id="${keyId}"]`);
+
+      if (card) {
+        card.classList.toggle('status-paused', isPaused);
+        
+        let badge = card.querySelector('.key-status-badge');
+        if (isPaused) {
+          if (!badge) {
+            badge = document.createElement('span');
+            const nameCol = card.querySelector('.key-name-col');
+            if (nameCol) nameCol.appendChild(badge);
+          }
+          badge.className = 'key-status-badge paused';
+          badge.innerHTML = '<i class="hgi-stroke hgi-pause sm"></i> Paused';
+        } else if (badge && badge.classList.contains('paused')) {
+          badge.remove();
+        }
+      }
+
+      if (btnElement) {
+        if (isPaused) {
+          btnElement.className = 'liquid-btn liquid-btn-glass liquid-btn-icon btn-toggle-pause is-paused';
+          btnElement.innerHTML = '<i class="hgi-stroke hgi-play"></i>';
+          btnElement.title = 'Resume traffic for this key';
+        } else {
+          btnElement.className = 'liquid-btn liquid-btn-glass liquid-btn-icon btn-toggle-pause is-active';
+          btnElement.innerHTML = '<i class="hgi-stroke hgi-pause"></i>';
+          btnElement.title = 'Temporarily suspend traffic (Pause)';
+        }
+      }
+
       showLiquidToast(
         isPaused ? `Key #${keyId} traffic suspended (Paused)` : `Key #${keyId} access resumed`,
         isPaused ? 'hgi-pause' : 'hgi-play'

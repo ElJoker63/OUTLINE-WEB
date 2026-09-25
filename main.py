@@ -79,7 +79,7 @@ async def get_outline_client(
 @app.get("/")
 async def root(request: Request, outline_client: OutlineVPN = Depends(get_outline_client)):
     if not outline_client:
-        return templates.TemplateResponse("sign-in.html", {"request": request})
+        return templates.TemplateResponse("landing.html", {"request": request})
 
     try:
         transferred_data = outline_client.get_transferred_data()
@@ -104,6 +104,20 @@ async def root(request: Request, outline_client: OutlineVPN = Depends(get_outlin
     }
 
     return templates.TemplateResponse("main.html", data)
+
+
+@app.get("/login")
+@app.get("/sign-in")
+async def sign_in_view(request: Request, outline_client: OutlineVPN = Depends(get_outline_client)):
+    if outline_client:
+        return RedirectResponse('/', status_code=status.HTTP_302_FOUND)
+    return templates.TemplateResponse("sign-in.html", {"request": request})
+
+
+@app.get("/landing")
+@app.get("/about")
+async def landing_view(request: Request):
+    return templates.TemplateResponse("landing.html", {"request": request})
 
 
 @app.post("/sign-in")

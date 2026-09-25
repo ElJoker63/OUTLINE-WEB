@@ -246,7 +246,7 @@
             {% set display_name = key.name if key.name else 'Key #' ~ key.key_id %}
             {% set is_paused = (key.data_limit == 1) %}
 
-            <div class="liquid-card liquid-card-hover key-card" data-key-id="{{ key.key_id }}" data-key-name="{{ display_name }}" style="{% if is_paused %}opacity: 0.65; border-color: rgba(245, 158, 11, 0.3);{% endif %}">
+            <div class="liquid-card liquid-card-hover key-card {% if is_paused %}status-paused{% elif effective_limit > 0 and (key.used_bytes or 0) >= effective_limit %}status-blocked{% endif %}" data-key-id="{{ key.key_id }}" data-key-name="{{ display_name }}">
               <!-- Col 1: Key ID Badge -->
               <div>
                 <div class="key-id-pill" title="Key ID: {{ key.key_id }}">
@@ -256,22 +256,29 @@
 
               <!-- Col 2: Name & Rename Form (AJAX) -->
               <div class="key-name-col">
-                <form class="key-rename-form" data-key-id="{{ key.key_id }}" action="/rename/{{ key.key_id }}" method="POST" style="margin: 0;">
-                  <div class="liquid-input-group" style="padding: 2px;">
-                    <input 
-                      type="text" 
-                      class="liquid-input" 
-                      name="keyName" 
-                      placeholder="{{ display_name }}" 
-                      value="{{ key.name }}"
-                      title="Click to rename key"
-                      style="font-weight: 600; padding: 6px 10px;"
-                    >
-                    <button type="submit" class="liquid-btn liquid-btn-glass liquid-btn-icon sm" title="Save new key name" aria-label="Rename Key">
-                      <i class="hgi-stroke hgi-pencil-edit-01"></i>
-                    </button>
-                  </div>
-                </form>
+                <div style="display: flex; align-items: center; gap: 4px;">
+                  <form class="key-rename-form" data-key-id="{{ key.key_id }}" action="/rename/{{ key.key_id }}" method="POST" style="margin: 0; flex: 1;">
+                    <div class="liquid-input-group" style="padding: 2px;">
+                      <input 
+                        type="text" 
+                        class="liquid-input" 
+                        name="keyName" 
+                        placeholder="{{ display_name }}" 
+                        value="{{ key.name }}"
+                        title="Click to rename key"
+                        style="font-weight: 600; padding: 6px 10px;"
+                      >
+                      <button type="submit" class="liquid-btn liquid-btn-glass liquid-btn-icon sm" title="Save new key name" aria-label="Rename Key">
+                        <i class="hgi-stroke hgi-pencil-edit-01"></i>
+                      </button>
+                    </div>
+                  </form>
+                  {% if is_paused %}
+                    <span class="key-status-badge paused"><i class="hgi-stroke hgi-pause sm"></i> Paused</span>
+                  {% elif effective_limit > 0 and (key.used_bytes or 0) >= effective_limit %}
+                    <span class="key-status-badge limit-reached"><i class="hgi-stroke hgi-alert-triangle sm"></i> Blocked</span>
+                  {% endif %}
+                </div>
               </div>
 
               <!-- Col 3: Usage & Progress Meter -->
@@ -326,12 +333,12 @@
                 <!-- Pause / Resume Traffic -->
                 <button 
                   type="button" 
-                  class="liquid-btn liquid-btn-glass liquid-btn-icon" 
+                  class="liquid-btn liquid-btn-glass liquid-btn-icon btn-toggle-pause {% if is_paused %}is-paused{% else %}is-active{% endif %}" 
                   onclick="togglePauseKey('{{ key.key_id }}', this)"
                   title="{% if is_paused %}Resume traffic for this key{% else %}Temporarily suspend traffic (Pause){% endif %}"
                   aria-label="Toggle Pause"
                 >
-                  <i class="hgi-stroke {% if is_paused %}hgi-play{% else %}hgi-pause{% endif %}" style="{% if is_paused %}color: #34d399;{% else %}color: #f59e0b;{% endif %}"></i>
+                  <i class="hgi-stroke {% if is_paused %}hgi-play{% else %}hgi-pause{% endif %}"></i>
                 </button>
 
                 <!-- Client 1-Click Invite Page -->

@@ -736,6 +736,88 @@ html, body {
   box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
 }
 
+/* Key Status State Variations */
+.key-card.status-paused {
+  border-color: rgba(245, 158, 11, 0.5) !important;
+  background: rgba(245, 158, 11, 0.05) !important;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6), 0 0 24px rgba(245, 158, 11, 0.2), inset 0 1px 1px 0 rgba(245, 158, 11, 0.4) !important;
+}
+
+.key-card.status-paused .key-id-pill {
+  color: #f59e0b !important;
+  background: rgba(245, 158, 11, 0.15) !important;
+  border-color: rgba(245, 158, 11, 0.5) !important;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.3) !important;
+}
+
+.key-card.status-paused .key-usage-val i {
+  color: #f59e0b !important;
+}
+
+.key-card.status-paused .liquid-progress-fill {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.5) !important;
+}
+
+.key-card.status-blocked {
+  border-color: rgba(244, 63, 94, 0.5) !important;
+  background: rgba(244, 63, 94, 0.05) !important;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6), 0 0 24px rgba(244, 63, 94, 0.2), inset 0 1px 1px 0 rgba(244, 63, 94, 0.4) !important;
+}
+
+.key-card.status-blocked .key-id-pill {
+  color: #fb7185 !important;
+  background: rgba(244, 63, 94, 0.15) !important;
+  border-color: rgba(244, 63, 94, 0.5) !important;
+  box-shadow: 0 0 14px rgba(244, 63, 94, 0.3) !important;
+}
+
+.key-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-left: 6px;
+}
+
+.key-status-badge.paused {
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.18);
+  border: 1px solid rgba(245, 158, 11, 0.45);
+}
+
+.key-status-badge.limit-reached {
+  color: #fb7185;
+  background: rgba(244, 63, 94, 0.18);
+  border: 1px solid rgba(244, 63, 94, 0.45);
+}
+
+.btn-toggle-pause.is-paused {
+  color: #34d399 !important;
+  border-color: rgba(16, 185, 129, 0.45) !important;
+  background: rgba(16, 185, 129, 0.14) !important;
+}
+
+.btn-toggle-pause.is-paused:hover {
+  background: rgba(16, 185, 129, 0.28) !important;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.4);
+}
+
+.btn-toggle-pause.is-active {
+  color: #f59e0b !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
+}
+
+.btn-toggle-pause.is-active:hover {
+  background: rgba(245, 158, 11, 0.18) !important;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.35);
+}
+
 .key-limit-col {
   display: flex;
   align-items: center;

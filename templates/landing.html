@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="description" content="Outline Web Manager - Next-generation management interface for Outline VPN servers.">
+    <meta name="theme-color" content="#06080d">
+    <title>Outline Web Manager | Modern VPN Management Portal</title>
+    <link rel="icon" type="image/x-icon" href="/static/images/favicon.png">
+    <link rel="manifest" href="/static/manifest.json">
+
+    <!-- Hugeicons Web Font CDN -->
+    <link rel="stylesheet" href="https://use.hugeicons.com/font/icons.css">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="/static/dist/css/liquid-glass.css">
+
+    <style>
+      .landing-hero {
+        text-align: center;
+        padding: 60px 20px 40px 20px;
+        max-width: 860px;
+        margin: 0 auto;
+      }
+      .landing-tagline {
+        font-size: 1.15rem;
+        color: var(--text-secondary);
+        line-height: 1.7;
+        margin: 0 auto 36px auto;
+        max-width: 680px;
+      }
+      .hero-badges-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+      }
+      .hero-feature-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border-glass);
+        border-radius: var(--radius-pill);
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+      }
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 20px;
+        margin-bottom: 50px;
+      }
+      .feature-card {
+        padding: 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .feature-icon-wrap {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        background: rgba(0, 242, 254, 0.08);
+        border: 1px solid rgba(0, 242, 254, 0.25);
+        color: var(--accent-cyan);
+      }
+      .feature-title {
+        margin: 0;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #fff;
+      }
+      .feature-desc {
+        margin: 0;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+      }
+      .steps-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 18px;
+        margin: 30px 0 50px 0;
+      }
+      .step-card {
+        padding: 24px;
+        position: relative;
+      }
+      .step-num {
+        font-family: var(--font-mono);
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: rgba(0, 242, 254, 0.25);
+        margin-bottom: 8px;
+      }
+      .cta-banner {
+        padding: 40px;
+        text-align: center;
+        background: linear-gradient(135deg, rgba(0, 242, 254, 0.08) 0%, rgba(168, 85, 247, 0.08) 100%);
+        border: 1px solid var(--border-glass-bright);
+        border-radius: 28px;
+        margin-bottom: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Ambient Background -->
+    <div class="liquid-bg-container">
+      <div class="liquid-orb orb-1"></div>
+      <div class="liquid-orb orb-2"></div>
+      <div class="liquid-orb orb-3"></div>
+      <div class="liquid-orb orb-4"></div>
+    </div>
+
+    <!-- Main Wrapper -->
+    <div style="max-width: 1140px; margin: 0 auto; padding: 0 20px 60px 20px;">
+
+      <!-- Top Navigation -->
+      <header class="liquid-navbar">
+        <a href="/" class="liquid-brand">
+          <div class="liquid-logo-wrap">
+            <img src="/static/images/outlinevpn.png" alt="Outline VPN">
+          </div>
+          <div class="liquid-brand-text">
+            <h1>Outline Web Manager</h1>
+            <div class="liquid-brand-badge">
+              <span class="liquid-pulse-dot"></span>
+              <span>Self-Hosted &bull; Open Source</span>
+            </div>
+          </div>
+        </a>
+
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <a href="#features" class="liquid-btn liquid-btn-glass liquid-btn-sm" style="display: none; @media(min-width: 600px){display: inline-flex;}">
+            <span>Features</span>
+          </a>
+          <a href="/sign-in" class="liquid-btn liquid-btn-cyan liquid-btn-sm">
+            <i class="hgi-stroke hgi-login-01"></i>
+            <span>Sign In to Server</span>
+          </a>
+        </div>
+      </header>
+
+      <!-- Hero Section -->
+      <section class="landing-hero">
+        <div class="hero-badges-row">
+          <div class="hero-feature-pill">
+            <i class="hgi-stroke hgi-shield-check" style="color: var(--accent-emerald);"></i>
+            <span>ShadowSocks Protocol</span>
+          </div>
+          <div class="hero-feature-pill">
+            <i class="hgi-stroke hgi-chart-bar-line" style="color: var(--accent-cyan);"></i>
+            <span>Live Traffic Analytics</span>
+          </div>
+          <div class="hero-feature-pill">
+            <i class="hgi-stroke hgi-flash" style="color: var(--accent-amber);"></i>
+            <span>Zero-Reload AJAX</span>
+          </div>
+        </div>
+
+        <h1 style="font-size: 2.75rem; font-weight: 800; letter-spacing: -0.03em; color: #fff; margin: 0 0 18px 0; line-height: 1.2;">
+          Next-Generation Control Panel for <span style="background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Outline VPN</span>
+        </h1>
+
+        <p class="landing-tagline">
+          A modern, private web management dashboard designed for Outline ShadowSocks servers. Monitor real-time traffic consumption, manage client access keys, and deploy 1-click connection portals with zero hassle.
+        </p>
+
+        <div style="display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;">
+          <a href="/sign-in" class="liquid-btn liquid-btn-cyan" style="padding: 14px 28px; font-size: 1rem; border-radius: 16px;">
+            <span>Connect Your Outline Server</span>
+            <i class="hgi-stroke hgi-arrow-right-01"></i>
+          </a>
+          <a href="https://github.com/ElJoker63/OUTLINE-WEB" target="_blank" rel="noopener" class="liquid-btn liquid-btn-glass" style="padding: 14px 24px; font-size: 1rem; border-radius: 16px;">
+            <i class="hgi-stroke hgi-github"></i>
+            <span>View on GitHub</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Key Capabilities Grid -->
+      <section id="features" style="margin-bottom: 60px;">
+        <div class="section-header" style="text-align: center; display: block; margin-bottom: 32px;">
+          <h2 style="font-size: 1.85rem; font-weight: 800; color: #fff; margin-bottom: 8px;">
+            Engineered for Security, Speed &amp; Simplicity
+          </h2>
+          <p style="color: var(--text-secondary); max-width: 580px; margin: 0 auto; font-size: 0.95rem;">
+            Everything you need to orchestrate and administer your Outline VPN nodes in one unified, reactive dashboard.
+          </p>
+        </div>
+
+        <div class="features-grid">
+          <!-- Feature 1 -->
+          <div class="liquid-card liquid-card-hover feature-card">
+            <div class="feature-icon-wrap">
+              <i class="hgi-stroke hgi-shield-key"></i>
+            </div>
+            <h3 class="feature-title">ShadowSocks AEAD Security</h3>
+            <p class="feature-desc">
+              Harnesses state-of-the-art encryption ciphers (ChaCha20-Poly1305 and AES-256-GCM) designed to resist deep packet inspection and network censorship.
+            </p>
+          </div>
+
+          <!-- Feature 2 -->
+          <div class="liquid-card liquid-card-hover feature-card">
+            <div class="feature-icon-wrap" style="color: var(--accent-emerald); background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.25);">
+              <i class="hgi-stroke hgi-flash"></i>
+            </div>
+            <h3 class="feature-title">Zero-Reload AJAX Architecture</h3>
+            <p class="feature-desc">
+              Create, rename, set personal limits, and delete access keys seamlessly without refreshing the webpage. Instant optimistic updates with spring animations.
+            </p>
+          </div>
+
+          <!-- Feature 3 -->
+          <div class="liquid-card liquid-card-hover feature-card">
+            <div class="feature-icon-wrap" style="color: var(--accent-violet); background: rgba(168, 85, 247, 0.08); border-color: rgba(168, 85, 247, 0.25);">
+              <i class="hgi-stroke hgi-chart-pie"></i>
+            </div>
+            <h3 class="feature-title">Visual Bandwidth Distribution</h3>
+            <p class="feature-desc">
+              Integrated Chart.js analytics that break down monthly data transfer across all active clients in vivid neon gauges with live polling support.
+            </p>
+          </div>
+
+          <!-- Feature 4 -->
+          <div class="liquid-card liquid-card-hover feature-card">
+            <div class="feature-icon-wrap" style="color: var(--accent-amber); background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.25);">
+              <i class="hgi-stroke hgi-pause"></i>
+            </div>
+            <h3 class="feature-title">Instant Key Suspension (Pause)</h3>
+            <p class="feature-desc">
+              Temporarily freeze traffic for any connected device without deleting its key or regenerating credentials. Resume access with one tap.
+            </p>
+          </div>
+
+          <!-- Feature 5 -->
+          <div class="liquid-card liquid-card-hover feature-card">
+            <div class="feature-icon-wrap" style="color: #38bdf8; background: rgba(56, 189, 248, 0.08); border-color: rgba(56, 189, 248, 0.25);">
+              <i class="hgi-stroke hgi-link-01"></i>
+            </div>
+            <h3 class="feature-title">1-Click Client Invite Pages</h3>
+            <p class="feature-desc">
+              Generate shareable client portals (<code>/invite/{key_id}</code>) featuring 1-click <code>outline://</code> connect triggers, QR codes, and official app store links.
+            </p>
+          </div>
+
+          <!-- Feature 6 -->
+          <div class="liquid-card liquid-card-hover feature-card">
+            <div class="feature-icon-wrap" style="color: #f43f5e; background: rgba(244, 63, 94, 0.08); border-color: rgba(244, 63, 94, 0.25);">
+              <i class="hgi-stroke hgi-server-stack-01"></i>
+            </div>
+            <h3 class="feature-title">Multi-Node Cluster Switcher</h3>
+            <p class="feature-desc">
+              Store multiple Outline server profiles and switch between different geographic regions (Tokyo, Frankfurt, Miami) straight from the navigation bar.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- How it Works Section -->
+      <section style="margin-bottom: 60px;">
+        <div class="section-header" style="text-align: center; display: block; margin-bottom: 24px;">
+          <h2 style="font-size: 1.85rem; font-weight: 800; color: #fff; margin-bottom: 8px;">
+            How It Works
+          </h2>
+          <p style="color: var(--text-secondary); max-width: 540px; margin: 0 auto; font-size: 0.95rem;">
+            Three simple steps to deploy and control your private VPN network.
+          </p>
+        </div>
+
+        <div class="steps-grid">
+          <div class="liquid-card step-card">
+            <div class="step-num">01</div>
+            <h3 style="color: #fff; font-size: 1.1rem; margin-bottom: 8px;">Deploy Outline Server</h3>
+            <p style="color: var(--text-secondary); font-size: 0.88rem; line-height: 1.5; margin: 0;">
+              Run the official installation script on any Linux cloud VPS (Ubuntu, Debian, CentOS). It configures the Outline Docker container automatically.
+            </p>
+          </div>
+
+          <div class="liquid-card step-card">
+            <div class="step-num">02</div>
+            <h3 style="color: #fff; font-size: 1.1rem; margin-bottom: 8px;">Paste Credentials</h3>
+            <p style="color: var(--text-secondary); font-size: 0.88rem; line-height: 1.5; margin: 0;">
+              Copy the resulting JSON snippet containing your secret <code>apiUrl</code> and <code>certSha256</code> hash, and paste it into the secure sign-in portal.
+            </p>
+          </div>
+
+          <div class="liquid-card step-card">
+            <div class="step-num">03</div>
+            <h3 style="color: #fff; font-size: 1.1rem; margin-bottom: 8px;">Manage &amp; Share</h3>
+            <p style="color: var(--text-secondary); font-size: 0.88rem; line-height: 1.5; margin: 0;">
+              Create individual device keys, assign monthly data transfer quotas, inspect live traffic stats, and invite users via QR codes.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Call to Action Banner -->
+      <section class="cta-banner">
+        <h2 style="font-size: 1.85rem; font-weight: 800; color: #fff; margin-bottom: 12px;">
+          Ready to manage your Outline server?
+        </h2>
+        <p style="color: var(--text-secondary); max-width: 520px; margin: 0 auto 28px auto; font-size: 0.95rem;">
+          Connect in seconds without configuring databases or cloud services. 100% self-hosted and private.
+        </p>
+        <a href="/sign-in" class="liquid-btn liquid-btn-cyan" style="padding: 14px 32px; font-size: 1.05rem; border-radius: 16px;">
+          <i class="hgi-stroke hgi-server-01"></i>
+          <span>Launch Web Manager</span>
+        </a>
+      </section>
+
+      <!-- Footer -->
+      <footer class="liquid-footer">
+        <i class="hgi-stroke hgi-shield-key" style="color: var(--accent-cyan);"></i>
+        <span>Outline Web Manager &bull; Open Source Privacy Infrastructure</span>
+      </footer>
+    </div>
+
+    <!-- Interactive Scripts -->
+    <script src="/static/dist/js/liquid-app.js"></script>
+  </body>
+</html>
