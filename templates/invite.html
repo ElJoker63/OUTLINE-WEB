@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Outline VPN - Client Connection Portal">
+    <title>Connect to {{ server_information['name'] }} | {{ key.name if key.name else 'Access Key' }}</title>
+    <link rel="icon" type="image/x-icon" href="/static/images/favicon.png">
+
+    <!-- Hugeicons Web Font CDN -->
+    <link rel="stylesheet" href="https://use.hugeicons.com/font/icons.css">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="/static/dist/css/liquid-glass.css">
+
+    <style>
+      .invite-viewport {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 30px 20px;
+      }
+      .invite-card {
+        width: 100%;
+        max-width: 540px;
+        padding: 36px;
+        text-align: center;
+        background: rgba(18, 24, 38, 0.78);
+        backdrop-filter: var(--blur-strong);
+        -webkit-backdrop-filter: var(--blur-strong);
+        border: 1px solid var(--border-glass-bright);
+        border-radius: 28px;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 242, 254, 0.15);
+      }
+      .client-app-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 12px;
+        margin: 24px 0;
+      }
+      .client-app-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        padding: 12px 8px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border-glass);
+        border-radius: 14px;
+        color: var(--text-main);
+        text-decoration: none;
+        font-size: 0.78rem;
+        font-weight: 600;
+        transition: var(--spring-bounce);
+      }
+      .client-app-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: var(--accent-cyan);
+        transform: translateY(-2px);
+        color: #fff;
+      }
+      .client-app-btn i {
+        font-size: 1.5rem;
+        color: var(--accent-cyan);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Ambient Background -->
+    <div class="liquid-bg-container">
+      <div class="liquid-orb orb-1"></div>
+      <div class="liquid-orb orb-2"></div>
+      <div class="liquid-orb orb-3"></div>
+      <div class="liquid-orb orb-4"></div>
+    </div>
+
+    <div class="invite-viewport">
+      <div class="invite-card">
+        <!-- Logo -->
+        <div class="signin-logo-wrap" style="width: 64px; height: 64px; margin-bottom: 16px;">
+          <img src="/static/images/outlinevpn.png" alt="Outline VPN" style="width: 40px; height: 40px;">
+        </div>
+
+        <div class="liquid-brand-badge mb-2" style="justify-content: center; margin-bottom: 10px;">
+          <span class="liquid-pulse-dot"></span>
+          <span>Encrypted VPN Tunnel</span>
+        </div>
+
+        <h1 style="font-size: 1.6rem; font-weight: 800; margin: 0 0 6px 0; color: #fff;">
+          {{ key.name if key.name else 'Access Key #' ~ key.key_id }}
+        </h1>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 24px;">
+          Server: <strong>{{ server_information['name'] }}</strong> ({{ server_information['hostnameForAccessKeys'] }})
+        </p>
+
+        <!-- 1-Click Connect Button -->
+        <a 
+          href="{{ key.access_url }}" 
+          class="liquid-btn liquid-btn-cyan" 
+          style="width: 100%; padding: 14px; font-size: 1.05rem; border-radius: 16px; margin-bottom: 20px;"
+        >
+          <i class="hgi-stroke hgi-plug-socket"></i>
+          <span>1-Click Connect in Outline</span>
+        </a>
+
+        <!-- QR Code -->
+        <div style="background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border-glass-subtle); border-radius: 20px; padding: 20px; margin-bottom: 24px;">
+          <div style="font-size: 0.82rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.05em;">
+            Scan QR with Mobile Outline App
+          </div>
+          <img 
+            src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data={{ key.access_url|urlencode }}&color=00f2fe&bgcolor=06080d&margin=1"
+            alt="Outline Access QR"
+            style="width: 190px; height: 190px; border-radius: 14px; box-shadow: 0 8px 24px rgba(0, 242, 254, 0.25);"
+          >
+        </div>
+
+        <!-- Manual Access URL -->
+        <div style="margin-bottom: 24px; text-align: left;">
+          <label style="font-size: 0.78rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 6px; display: block;">
+            Manual Access Key
+          </label>
+          <div class="liquid-input-group" style="padding: 2px;">
+            <input type="text" class="liquid-input mono" id="manualAccessUrl" value="{{ key.access_url }}" readonly style="font-size: 0.76rem;">
+            <button type="button" class="liquid-btn liquid-btn-glass liquid-btn-sm" onclick="copyToClipboard(document.getElementById('manualAccessUrl').value, this, 'Access Key copied!')">
+              <i class="hgi-stroke hgi-copy-01"></i>
+              <span>Copy</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Download Outline Clients -->
+        <div style="border-top: 1px solid var(--border-glass); padding-top: 20px;">
+          <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">
+            Don't have the Outline app? Download it below:
+          </span>
+          <div class="client-app-grid">
+            <a href="https://itunes.apple.com/app/outline-app/id1356177741" target="_blank" rel="noopener" class="client-app-btn">
+              <i class="hgi-stroke hgi-apple"></i>
+              <span>iOS / iPad</span>
+            </a>
+            <a href="https://play.google.com/store/apps/details?id=org.outline.android.client" target="_blank" rel="noopener" class="client-app-btn">
+              <i class="hgi-stroke hgi-smart-phone-01"></i>
+              <span>Android</span>
+            </a>
+            <a href="https://itunes.apple.com/app/outline-app/id1356178125" target="_blank" rel="noopener" class="client-app-btn">
+              <i class="hgi-stroke hgi-laptop-programming"></i>
+              <span>macOS</span>
+            </a>
+            <a href="https://s3.amazonaws.com/outline-releases/client/windows/stable/Outline-Client.exe" target="_blank" rel="noopener" class="client-app-btn">
+              <i class="hgi-stroke hgi-computer"></i>
+              <span>Windows</span>
+            </a>
+          </div>
+        </div>
+
+        <footer class="liquid-footer" style="padding: 12px 0 0 0;">
+          <a href="/">Outline Web Manager</a>
+        </footer>
+      </div>
+    </div>
+
+    <!-- Liquid Toast Dynamic Container -->
+    <div id="liquid-toast-container" class="liquid-toast-container"></div>
+
+    <script src="/static/dist/js/liquid-app.js"></script>
+  </body>
+</html>

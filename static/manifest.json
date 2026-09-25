@@ -1,0 +1,24 @@
+{
+  "name": "Outline Web Manager",
+  "short_name": "Outline",
+  "description": "Next-generation management dashboard for Outline VPN servers",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#06080d",
+  "theme_color": "#06080d",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/static/images/outlinevpn.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/images/outlinevpn.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

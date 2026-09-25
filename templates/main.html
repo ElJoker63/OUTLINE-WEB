@@ -2,16 +2,23 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="description" content="Outline Web Manager Dashboard">
+    <meta name="theme-color" content="#06080d">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Outline Web Manager | {{ server_information['name'] }}</title>
     <link rel="icon" type="image/x-icon" href="/static/images/favicon.png">
+    <link rel="manifest" href="/manifest.json">
 
     <!-- Hugeicons Web Font CDN -->
     <link rel="stylesheet" href="https://use.hugeicons.com/font/icons.css">
 
     <!-- Stylesheet -->
     <link rel="stylesheet" href="/static/dist/css/liquid-glass.css">
+
+    <!-- Chart.js for Visual Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   </head>
   <body>
     <!-- Ambient Background -->
@@ -27,20 +34,28 @@
 
       <!-- Top Navigation -->
       <header class="liquid-navbar">
-        <a href="/" class="liquid-brand">
-          <div class="liquid-logo-wrap">
-            <img src="/static/images/outlinevpn.png" alt="Outline VPN">
-          </div>
-          <div class="liquid-brand-text">
-            <h1>{{ server_information['name'] }}</h1>
-            <div class="liquid-brand-badge">
-              <span class="liquid-pulse-dot"></span>
-              <span>Online &bull; Encrypted</span>
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <a href="/" class="liquid-brand">
+            <div class="liquid-logo-wrap">
+              <img src="/static/images/outlinevpn.png" alt="Outline VPN">
             </div>
-          </div>
-        </a>
+            <div class="liquid-brand-text">
+              <h1 id="serverNameNav">{{ server_information['name'] }}</h1>
+              <div class="liquid-brand-badge" id="serverPingBadge" onclick="checkServerLatency()" title="Click to refresh ping" style="cursor: pointer;">
+                <span class="liquid-pulse-dot" id="serverPingDot"></span>
+                <span id="serverPingText">Checking latency...</span>
+              </div>
+            </div>
+          </a>
 
-        <div style="display: flex; align-items: center; gap: 12px;">
+          <!-- Multi-Server Switcher Button -->
+          <button type="button" class="liquid-btn liquid-btn-glass liquid-btn-sm" onclick="showMultiServerModal()" title="Switch or Add Outline Servers">
+            <i class="hgi-stroke hgi-server-stack-01"></i>
+            <span>Nodes</span>
+          </button>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px;">
           <form action="/logout" method="POST" style="margin: 0;">
             <button type="submit" class="liquid-btn liquid-btn-glass liquid-btn-sm" title="Log out of server">
               <i class="hgi-stroke hgi-logout-01"></i>
@@ -62,7 +77,7 @@
           </div>
           <div>
             <h2 class="stat-value">
-              {{ "%.2f"|format((total_month_usage or 0) / 1000 / 1000 / 1000) }}
+              <span id="statTotalTransfer">{{ "%.2f"|format((total_month_usage or 0) / 1000 / 1000 / 1000) }}</span>
               <span class="stat-unit">GB</span>
             </h2>
             <div class="stat-footer">
@@ -82,7 +97,7 @@
           </div>
           <div>
             <h2 class="stat-value">
-              {{ keys|length }}
+              <span id="statActiveKeysCount">{{ keys|length }}</span>
               <span class="stat-unit">active</span>
             </h2>
             <div class="stat-footer">
@@ -136,9 +151,23 @@
         </div>
       </section>
 
-      <!-- Quick Add New Key Banner -->
+      <!-- Bandwidth Distribution Analytics (Chart.js) -->
+      <section class="liquid-card" style="padding: 22px 24px; margin-bottom: 28px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+          <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px;">
+            <i class="hgi-stroke hgi-chart-bar-line" style="color: var(--accent-cyan);"></i>
+            <span>Bandwidth Distribution per Client</span>
+          </h3>
+          <span style="font-size: 0.78rem; color: var(--text-muted);">Real-time Client Usage Share</span>
+        </div>
+        <div style="height: 180px; position: relative;">
+          <canvas id="bandwidthChart"></canvas>
+        </div>
+      </section>
+
+      <!-- Quick Add New Key Banner (AJAX Powered) -->
       <section class="liquid-card create-key-banner">
-        <form action="/add" method="POST">
+        <form id="createKeyForm" action="/add" method="POST">
           <div class="liquid-input-group">
             <div class="liquid-input-icon">
               <i class="hgi-stroke hgi-key-01"></i>
@@ -169,20 +198,29 @@
             <span class="section-count-badge" id="keyCountBadge">{{ keys|length }}</span>
           </h2>
 
-          <!-- Real-time Filter Search -->
-          <div class="filter-search-wrap">
-            <div class="liquid-input-group" style="padding: 2px;">
-              <div class="liquid-input-icon">
-                <i class="hgi-stroke hgi-search-01"></i>
+          <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <!-- Live Sync Polling Toggle -->
+            <div style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.04); border: 1px solid var(--border-glass); border-radius: 9999px; padding: 6px 14px;">
+              <span class="liquid-pulse-dot" style="width: 6px; height: 6px;"></span>
+              <span style="font-size: 0.76rem; font-weight: 600; color: var(--text-secondary);">Live Sync</span>
+              <input type="checkbox" id="liveSyncToggle" style="cursor: pointer; accent-color: var(--accent-emerald);">
+            </div>
+
+            <!-- Real-time Filter Search -->
+            <div class="filter-search-wrap">
+              <div class="liquid-input-group" style="padding: 2px;">
+                <div class="liquid-input-icon">
+                  <i class="hgi-stroke hgi-search-01"></i>
+                </div>
+                <input 
+                  type="text" 
+                  class="liquid-input" 
+                  id="keySearchInput" 
+                  placeholder="Filter keys by name or ID..."
+                  autocomplete="off"
+                  style="padding: 6px 10px; font-size: 0.85rem;"
+                >
               </div>
-              <input 
-                type="text" 
-                class="liquid-input" 
-                id="keySearchInput" 
-                placeholder="Filter keys by name or ID..."
-                autocomplete="off"
-                style="padding: 6px 10px; font-size: 0.85rem;"
-              >
             </div>
           </div>
         </div>
@@ -206,8 +244,9 @@
             {% set limit_gb = effective_limit / 1000 / 1000 / 1000 if effective_limit > 0 else 0 %}
             {% set usage_percent = ((key.used_bytes or 0) / effective_limit * 100) if effective_limit > 0 else 0 %}
             {% set display_name = key.name if key.name else 'Key #' ~ key.key_id %}
+            {% set is_paused = (key.data_limit == 1) %}
 
-            <div class="liquid-card liquid-card-hover key-card" data-key-id="{{ key.key_id }}" data-key-name="{{ display_name }}">
+            <div class="liquid-card liquid-card-hover key-card" data-key-id="{{ key.key_id }}" data-key-name="{{ display_name }}" style="{% if is_paused %}opacity: 0.65; border-color: rgba(245, 158, 11, 0.3);{% endif %}">
               <!-- Col 1: Key ID Badge -->
               <div>
                 <div class="key-id-pill" title="Key ID: {{ key.key_id }}">
@@ -215,9 +254,9 @@
                 </div>
               </div>
 
-              <!-- Col 2: Name & Rename Form -->
+              <!-- Col 2: Name & Rename Form (AJAX) -->
               <div class="key-name-col">
-                <form action="/rename/{{ key.key_id }}" method="POST" style="margin: 0;">
+                <form class="key-rename-form" data-key-id="{{ key.key_id }}" action="/rename/{{ key.key_id }}" method="POST" style="margin: 0;">
                   <div class="liquid-input-group" style="padding: 2px;">
                     <input 
                       type="text" 
@@ -240,7 +279,9 @@
                 <div class="key-usage-val">
                   <i class="hgi-stroke hgi-database-01"></i>
                   <span>{{ "%.2f"|format(usage_gb) }} GB</span>
-                  {% if limit_gb > 0 %}
+                  {% if is_paused %}
+                    <span style="color: #f59e0b; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">[Paused]</span>
+                  {% elif limit_gb > 0 %}
                     <span style="color: var(--text-muted); font-size: 0.8rem; font-weight: 500;">/ {{ "%.0f"|format(limit_gb) }} GB</span>
                   {% endif %}
                 </div>
@@ -252,15 +293,16 @@
                 </div>
               </div>
 
-              <!-- Col 4: Personal Data Limit -->
+              <!-- Col 4: Personal Data Limit (AJAX) -->
               <div class="key-limit-col">
-                <form action="/set-data-limit/{{ key.key_id }}" method="POST" style="margin: 0; display: flex; align-items: center; gap: 6px; width: 100%;">
+                <form class="key-limit-form" data-key-id="{{ key.key_id }}" action="/set-data-limit/{{ key.key_id }}" method="POST" style="margin: 0; display: flex; align-items: center; gap: 6px; width: 100%;">
                   <div class="liquid-input-group" style="padding: 2px; flex: 1;">
                     <input 
                       type="number" 
+                      step="any"
                       class="liquid-input" 
                       name="dataLimit" 
-                      placeholder="{% if key.data_limit %}{{ '%.0f'|format(key.data_limit / 1000 / 1000 / 1000) }} GB{% elif 'accessKeyDataLimit' in server_information %}{{ '%.0f'|format(server_information['accessKeyDataLimit']['bytes'] / 1000 / 1000 / 1000) }} GB (Global){% else %}No limit{% endif %}"
+                      placeholder="{% if key.data_limit and key.data_limit > 1 %}{{ '%.0f'|format(key.data_limit / 1000 / 1000 / 1000) }} GB{% elif 'accessKeyDataLimit' in server_information %}{{ '%.0f'|format(server_information['accessKeyDataLimit']['bytes'] / 1000 / 1000 / 1000) }} GB (Global){% else %}No limit{% endif %}"
                       title="Set personal data transfer limit (GB)"
                       style="padding: 6px 10px; font-size: 0.85rem;"
                     >
@@ -270,8 +312,8 @@
                   </div>
                 </form>
 
-                {% if key.data_limit %}
-                  <form action="/delete-data-limit/{{ key.key_id }}" method="POST" style="margin: 0;">
+                {% if key.data_limit and key.data_limit > 1 %}
+                  <form class="key-delete-limit-form" data-key-id="{{ key.key_id }}" action="/delete-data-limit/{{ key.key_id }}" method="POST" style="margin: 0;">
                     <button type="submit" class="liquid-btn liquid-btn-danger liquid-btn-icon sm" title="Remove individual limit" aria-label="Delete Limit">
                       <i class="hgi-stroke hgi-delete-02"></i>
                     </button>
@@ -279,13 +321,36 @@
                 {% endif %}
               </div>
 
-              <!-- Col 5: Actions (Copy, QR, Delete) -->
+              <!-- Col 5: Actions (Pause, Invite, QR, Copy, Delete) -->
               <div class="key-actions-col">
+                <!-- Pause / Resume Traffic -->
+                <button 
+                  type="button" 
+                  class="liquid-btn liquid-btn-glass liquid-btn-icon" 
+                  onclick="togglePauseKey('{{ key.key_id }}', this)"
+                  title="{% if is_paused %}Resume traffic for this key{% else %}Temporarily suspend traffic (Pause){% endif %}"
+                  aria-label="Toggle Pause"
+                >
+                  <i class="hgi-stroke {% if is_paused %}hgi-play{% else %}hgi-pause{% endif %}" style="{% if is_paused %}color: #34d399;{% else %}color: #f59e0b;{% endif %}"></i>
+                </button>
+
+                <!-- Client 1-Click Invite Page -->
+                <a 
+                  href="/invite/{{ key.key_id }}" 
+                  target="_blank" 
+                  rel="noopener"
+                  class="liquid-btn liquid-btn-glass liquid-btn-icon" 
+                  title="Open Client 1-Click Invite Page"
+                  aria-label="Client Invite Page"
+                >
+                  <i class="hgi-stroke hgi-link-01"></i>
+                </a>
+
                 <!-- QR Code View Modal Trigger -->
                 <button 
                   type="button" 
                   class="liquid-btn liquid-btn-glass liquid-btn-icon" 
-                  onclick="showQrModal('{{ key.access_url }}', '{{ display_name }}')"
+                  onclick="showQrModal('{{ key.access_url }}', '{{ display_name }}', '{{ key.key_id }}')"
                   title="Show QR Code for Outline Client"
                   aria-label="Show QR Code"
                 >
@@ -303,18 +368,16 @@
                   <i class="hgi-stroke hgi-copy-01"></i>
                 </button>
 
-                <!-- Delete Key Form with Confirmation -->
-                <form id="deleteForm-{{ key.key_id }}" action="/delete/{{ key.key_id }}" method="POST" style="margin: 0;">
-                  <button 
-                    type="button" 
-                    class="liquid-btn liquid-btn-danger liquid-btn-icon" 
-                    onclick="confirmDeleteKey('deleteForm-{{ key.key_id }}', '{{ display_name }}')"
-                    title="Delete Key"
-                    aria-label="Delete Key"
-                  >
-                    <i class="hgi-stroke hgi-delete-02"></i>
-                  </button>
-                </form>
+                <!-- Delete Key Button with AJAX Confirmation Modal -->
+                <button 
+                  type="button" 
+                  class="liquid-btn liquid-btn-danger liquid-btn-icon" 
+                  onclick="confirmDeleteKey('{{ key.key_id }}', '{{ display_name }}')"
+                  title="Delete Key"
+                  aria-label="Delete Key"
+                >
+                  <i class="hgi-stroke hgi-delete-02"></i>
+                </button>
               </div>
             </div>
           {% endfor %}
@@ -518,6 +581,34 @@
     <!-- Liquid Toast Dynamic Container -->
     <div id="liquid-toast-container" class="liquid-toast-container"></div>
 
+    <!-- Multi-Server Profile Switcher Modal -->
+    <div id="serverSwitcherModal" class="glass-modal-backdrop">
+      <div class="glass-modal">
+        <div class="glass-modal-header">
+          <h3 class="glass-modal-title">
+            <i class="hgi-stroke hgi-server-stack-01" style="color: var(--accent-cyan);"></i>
+            <span>Outline Nodes</span>
+          </h3>
+          <button type="button" class="liquid-btn liquid-btn-glass liquid-btn-icon sm" onclick="closeMultiServerModal()">
+            <i class="hgi-stroke hgi-cancel-01"></i>
+          </button>
+        </div>
+        <div class="glass-modal-body">
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 16px;">
+            Switch between connected servers or add a new Outline node:
+          </p>
+          <div id="serverProfilesList" style="max-height: 220px; overflow-y: auto; margin-bottom: 20px;"></div>
+          
+          <div style="border-top: 1px solid var(--border-glass); padding-top: 16px;">
+            <a href="/" class="liquid-btn liquid-btn-cyan" style="width: 100%;">
+              <i class="hgi-stroke hgi-add-01"></i>
+              <span>Connect New Server Profile</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- QR Code Modal -->
     <div id="qrModal" class="glass-modal-backdrop">
       <div class="glass-modal">
@@ -535,13 +626,17 @@
             Scan this code with the <strong>Outline Client app</strong> on iOS, Android, macOS, or Windows to connect instantly.
           </p>
           <div id="qrCodeContainer" style="display: flex; justify-content: center; margin-bottom: 20px;"></div>
-          <div class="liquid-input-group" style="padding: 2px;">
+          <div class="liquid-input-group" style="padding: 2px; margin-bottom: 16px;">
             <input type="text" class="liquid-input mono" id="qrAccessUrl" readonly style="font-size: 0.78rem;">
             <button type="button" class="liquid-btn liquid-btn-glass liquid-btn-sm" onclick="copyToClipboard(document.getElementById('qrAccessUrl').value, this, 'Access URL copied!')">
               <i class="hgi-stroke hgi-copy-01"></i>
               <span>Copy</span>
             </button>
           </div>
+          <a id="qrInvitePageBtn" href="#" target="_blank" class="liquid-btn liquid-btn-cyan" style="width: 100%;">
+            <i class="hgi-stroke hgi-link-01"></i>
+            <span>Open 1-Click Client Invite Page</span>
+          </a>
         </div>
         <div class="glass-modal-footer">
           <button type="button" class="liquid-btn liquid-btn-glass" onclick="closeQrModal()">Close</button>
@@ -549,7 +644,7 @@
       </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
+    <!-- Delete Confirmation Modal (AJAX) -->
     <div id="deleteConfirmModal" class="glass-modal-backdrop">
       <div class="glass-modal">
         <div class="glass-modal-header">
@@ -576,5 +671,23 @@
 
     <!-- Interactive Scripts -->
     <script src="/static/dist/js/liquid-app.js"></script>
+
+    <!-- Initialize Bandwidth Chart with Live Key Data -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const rawKeys = [
+          {% for key in keys %}
+            {
+              key_id: {{ key.key_id|tojson }},
+              name: {{ (key.name if key.name else 'Key #' ~ key.key_id)|tojson }},
+              used_bytes: {{ (key.used_bytes or 0)|tojson }}
+            }{% if not loop.last %},{% endif %}
+          {% endfor %}
+        ];
+        if (typeof initBandwidthChart === 'function') {
+          initBandwidthChart(rawKeys);
+        }
+      });
+    </script>
   </body>
 </html>
